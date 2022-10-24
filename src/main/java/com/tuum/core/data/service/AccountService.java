@@ -12,12 +12,15 @@ import java.util.List;
 @Service
 public class AccountService {
 
+    public AccountService() {
+    }
+
     public Account createAccount(Account account) throws InvalidCurrencyException {
         return new Account();
     }
 
     public Account getAccount(Long id) throws AccountNotFoundException {
-        return new Account();
+        return new Account(46L);
     }
 
     public Transaction createTransaction(Transaction transaction)
