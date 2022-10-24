@@ -1,14 +1,13 @@
-package com.tuum.core.controller;
+package com.tuum.app.controller;
 
-import com.tuum.core.data.entity.Account;
-import com.tuum.core.data.entity.Transaction;
-import com.tuum.core.data.exception.*;
-import com.tuum.core.data.service.AccountService;
+import com.tuum.app.data.entity.Account;
+import com.tuum.app.data.entity.Transaction;
+import com.tuum.app.data.exception.*;
+import com.tuum.app.data.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -38,7 +37,7 @@ public class Controller {
 
     @GetMapping(path = "account/{id}")
     public ResponseEntity<Account> getAccount(@PathVariable("id") Long id)
-            throws AccountNotFoundException {
+            throws AccountMissingException {
         return new ResponseEntity<>(accountService.getAccount(id), HttpStatus.OK);
     }
 

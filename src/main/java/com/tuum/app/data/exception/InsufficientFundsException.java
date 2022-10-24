@@ -1,4 +1,4 @@
-package com.tuum.core.data.exception;
+package com.tuum.app.data.exception;
 
 public class InsufficientFundsException extends Exception {
 }

@@ -1,11 +1,10 @@
-package com.tuum.core.data.service;
+package com.tuum.app.data.service;
 
-import com.tuum.core.data.entity.Account;
-import com.tuum.core.data.entity.Transaction;
-import com.tuum.core.data.exception.*;
+import com.tuum.app.data.entity.Account;
+import com.tuum.app.data.entity.Transaction;
+import com.tuum.app.data.exception.*;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +18,8 @@ public class AccountService {
         return new Account();
     }
 
-    public Account getAccount(Long id) throws AccountNotFoundException {
-        return new Account(46L);
+    public Account getAccount(Long id) throws AccountMissingException {
+        return new Account();
     }
 
     public Transaction createTransaction(Transaction transaction)
