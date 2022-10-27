@@ -1,16 +1,17 @@
 package com.tuum.app.controller;
 
-import com.tuum.app.data.entity.Account;
-import com.tuum.app.data.entity.Transaction;
+import com.tuum.app.data.model.dto.AccountGetDto;
+import com.tuum.app.data.model.dto.AccountPostDto;
+import com.tuum.app.data.model.entity.Account;
 import com.tuum.app.data.exception.*;
+import com.tuum.app.data.model.mapper.Mapper;
 import com.tuum.app.data.service.AccountService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/")
@@ -22,26 +23,54 @@ public class Controller {
         this.accountService = accountService;
     }
 
-    //TODO @Valid, @RequestBody?, @ResponseBody?
-    // TODO ResponseEntity.created(URI).body(accountService.getAccount(id));??
-    // TODO What is the correct Http Response: Headers, statuses, body??
     // TODO URISyntaxException where to catch??
 
-    @PostMapping(path = "account", consumes = "application/json")
-    public ResponseEntity<Account> createAccount(@RequestBody Account account)
-            throws InvalidCurrencyException, URISyntaxException {
-        return ResponseEntity
-                .created(new URI("/account/" + account.getId()))
-                .body(accountService.createAccount(account));
-    }
+    @GetMapping(
+            path = "account/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
 
-    @GetMapping(path = "account/{id}")
-    public ResponseEntity<Account> getAccount(@PathVariable("id") Long id)
+    public ResponseEntity<AccountGetDto> getAccount(@PathVariable("id") Long id)
             throws AccountMissingException {
-        return new ResponseEntity<>(accountService.getAccount(id), HttpStatus.OK);
+
+        Account account = accountService.getAccount(id);
+        AccountGetDto accountGetDto = Mapper.accountToAccountGetDto(account);
+
+        return new ResponseEntity<>(accountGetDto, HttpStatus.OK);
     }
 
-    @PostMapping(path = "transaction", consumes = "application/json")
+
+    @PostMapping(
+            path = "account",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+
+    public ResponseEntity<AccountGetDto> createAccount(@RequestBody @Valid AccountPostDto accountPostDto)
+            throws InvalidCurrencyException {
+
+        Account account = Mapper.accountPostDtoToAccount(accountPostDto);
+        account = accountService.createAccount(account);
+        AccountGetDto accountGetDto = Mapper.accountToAccountGetDto(account);
+
+        return new ResponseEntity<>(accountGetDto, HttpStatus.CREATED);
+    }
+
+
+   /* @GetMapping(
+            path = "transaction/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+
+    public ResponseEntity<List<Transaction>> getTransactions(@PathVariable("id") Long accountId)
+            throws AccountMissingException {
+
+        return new ResponseEntity<>(accountService.getTransactions(accountId), HttpStatus.OK);
+    }
+
+
+    @PostMapping(
+            path = "transaction",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+
     public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction)
             throws
             AccountMissingException,
@@ -50,12 +79,7 @@ public class Controller {
             InvalidDirectionException,
             DescriptionMissingException,
             InvalidCurrencyException {
-        return new ResponseEntity<>(accountService.createTransaction(transaction), HttpStatus.CREATED);
-    }
 
-    @GetMapping(path = "transaction/{id}", consumes = "application/json")
-    public ResponseEntity<List<Transaction>> getTransactions(@PathVariable("id") Long accountId)
-            throws AccountMissingException {
-        return new ResponseEntity<>(accountService.getTransactions(accountId), HttpStatus.OK);
-    }
+        return new ResponseEntity<>(accountService.createTransaction(transaction), HttpStatus.CREATED);
+    }*/
 }

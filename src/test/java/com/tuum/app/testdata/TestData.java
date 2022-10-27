@@ -1,10 +1,9 @@
-package com.tuum.app;
+package com.tuum.app.testdata;
 
-import com.tuum.app.data.entity.Currency;
+import com.tuum.app.data.model.entity.Currency;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Arrays;
 
 public class TestData {
 
@@ -34,7 +33,7 @@ public class TestData {
             json = new JSONObject();
             json.put("customerId", CUSTOMER_ID);
             json.put("country", COUNTRY);
-            json.put("currencies", Arrays.stream(Currency.values()).map(Enum::name).toArray(String[]::new));
+            json.put("currencies", new JSONArray(Currency.getAllAsStringArray()));
             POST_ACCOUNT_REQUEST_JSON = json;
 
             json = new JSONObject();

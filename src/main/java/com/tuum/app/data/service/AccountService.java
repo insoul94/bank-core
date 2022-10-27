@@ -1,7 +1,7 @@
 package com.tuum.app.data.service;
 
-import com.tuum.app.data.entity.Account;
-import com.tuum.app.data.entity.Transaction;
+import com.tuum.app.data.model.entity.Account;
+import com.tuum.app.data.model.entity.Transaction;
 import com.tuum.app.data.exception.*;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +15,11 @@ public class AccountService {
     }
 
     public Account createAccount(Account account) throws InvalidCurrencyException {
-        return new Account();
+        return account;
     }
 
     public Account getAccount(Long id) throws AccountMissingException {
-        return new Account();
+        return Account.builder().build();
     }
 
     public Transaction createTransaction(Transaction transaction)
