@@ -1,7 +1,7 @@
-package com.tuum.app.data.model.dto;
+package com.tuum.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tuum.app.data.model.entity.Currency;
+import com.tuum.app.constant.Currency;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,13 +10,13 @@ import java.util.HashMap;
 
 @Data
 @Builder
-public class AccountGetDto {
-    @JsonProperty("accountId")
+public class AccountResponseDto {
+
+    @JsonProperty("account_id")
     private Long accountId;
 
-    @JsonProperty("customerId")
+    @JsonProperty("customer_id")
     private Long customerId;
 
-    @JsonProperty("balances")
     private HashMap<Currency, BigDecimal> balances;
 }

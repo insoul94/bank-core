@@ -1,4 +1,8 @@
-package com.tuum.app.data.model.entity;
+package com.tuum.app.constant;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum Currency {
     EUR, GBP, SEK, USD;
@@ -9,5 +13,9 @@ public enum Currency {
             arr[i] = values()[i].name();
         }
         return arr;
+    }
+
+    public static Set<Currency> valuesAsSet() {
+        return Arrays.stream(values()).collect(Collectors.toSet());
     }
 }

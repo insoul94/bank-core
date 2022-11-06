@@ -1,4 +1,4 @@
-package com.tuum.app.data.exception;
+package com.tuum.app.exception;
 
 public class DescriptionMissingException extends Exception {
 }

@@ -1,21 +1,22 @@
-package com.tuum.app.data.model.dto;
+package com.tuum.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tuum.app.data.model.entity.Currency;
+import com.tuum.app.constant.Currency;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Data
-public class AccountPostDto {
+@Builder
+public class AccountRequestDto {
+
     @NotNull
-    @JsonProperty("customerId")
+    @JsonProperty("customer_id")
     private Long customerId;
 
-    @JsonProperty("country")
     private String country;
 
-    @JsonProperty("currencies")
     private Set<Currency> currencies;
 }

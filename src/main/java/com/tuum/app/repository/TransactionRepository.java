@@ -1,4 +1,4 @@
-package com.tuum.app.data.repository;
+package com.tuum.app.repository;
 
 public interface TransactionRepository {
 }
