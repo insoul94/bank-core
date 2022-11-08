@@ -7,13 +7,15 @@ import com.tuum.app.dto.TransactionRequestDto;
 import com.tuum.app.entity.Account;
 
 import java.math.BigDecimal;
+import java.util.Random;
 
 import static com.tuum.app.util.HttpUtils.*;
 
 public class TestData {
 
     public final static long ACCOUNT_ID = 1;
-    public final static long CUSTOMER_ID = 22;
+    // Test only positive numbers
+    public final static Long CUSTOMER_ID = new Random().nextLong(Long.SIZE-1);
     public final static int TRANSACTION_ID = 333;
     public final static BigDecimal AMOUNT = BigDecimal.valueOf(1000.00);
     public final static String COUNTRY = "Estonia";

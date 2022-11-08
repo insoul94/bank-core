@@ -5,9 +5,9 @@ import com.tuum.app.constant.Direction;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
+//@Entity
 @Getter
 @Setter
 @ToString
@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 @Builder
 public class Transaction {
 
+    //@GenerationType.SEQUENCE?
     private Long id;
 
     private Long accountId;

@@ -1,27 +1,32 @@
 package com.tuum.app.entity;
 
+import lombok.*;
 
-import com.tuum.app.constant.Currency;
-import lombok.Builder;
-import lombok.Data;
+import javax.persistence.*;
+import java.util.Set;
 
-import javax.persistence.Column;
-import java.math.BigDecimal;
-import java.util.HashMap;
-
-@Data
+@Entity
+@Table(name = "account")
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 @Builder
 public class Account {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private Long id;
 
-    @Column(name = "customer_id")
+    @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
-    // @Transient ?
     private String country;
 
-    // TODO separate column for each currency?
-    private HashMap<Currency, BigDecimal> balances;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
+    private Set<Balance> balances;
 
+    public Account() {
+    }
 }

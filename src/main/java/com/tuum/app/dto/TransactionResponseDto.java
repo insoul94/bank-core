@@ -12,10 +12,10 @@ import java.math.BigDecimal;
 @Builder
 public class TransactionResponseDto {
 
-    private Long id;
-
     @JsonProperty("account_id)")
     private Long accountId;
+
+    private Long id;
 
     private BigDecimal amount;
 

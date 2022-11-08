@@ -6,24 +6,30 @@ import com.tuum.app.constant.Direction;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @Data
 @Builder
 public class TransactionRequestDto {
 
+    @Positive
     @JsonProperty("account_id")
     private Long accountId;
 
-    @JsonProperty
+    @NotNull
+    @Positive
     private BigDecimal amount;
 
-    @JsonProperty
+    @NotNull
     private Currency currency;
 
-    @JsonProperty
+    @NotNull
     private Direction direction;
 
-    @JsonProperty
+    @NotBlank
     private String description;
+
 }
