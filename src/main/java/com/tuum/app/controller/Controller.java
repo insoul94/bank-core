@@ -35,8 +35,7 @@ public class Controller {
             throws InvalidCurrencyException {
 
         return new ResponseEntity<>(
-                accountService.createAccount(accountRequestDto),
-                HttpStatus.CREATED);
+                accountService.createAccount(accountRequestDto), HttpStatus.CREATED);
     }
 
     @GetMapping(
@@ -46,7 +45,8 @@ public class Controller {
     public ResponseEntity<AccountResponseDto> getAccount(@PathVariable("id") Long id)
             throws AccountMissingException {
 
-        return new ResponseEntity<>(accountService.getAccount(id), HttpStatus.FOUND);
+        return new ResponseEntity<>(
+                accountService.getAccount(id), HttpStatus.FOUND);
     }
 
 

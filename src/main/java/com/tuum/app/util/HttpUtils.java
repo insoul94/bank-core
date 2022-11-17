@@ -18,42 +18,55 @@ import java.util.*;
 @Slf4j
 public class HttpUtils {
 
-    public static String toJson(Object o) {
+    public static String toJson(Object obj) {
         ObjectMapper mapper = new ObjectMapper();
         String json = null;
         try {
-            json = mapper.writeValueAsString(o);
+            json = mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            log.error("Error while parsing object to JSON. Class: " + o.getClass().getName());
+            log.error(String.format(
+                    "Error while writing object to JSON. \nType: %s, \nError: %s",
+                    obj.getClass().getName(), e.getMessage()));
         }
         return json;
     }
 
-    public static AccountResponseDto parseIntoAccountResponseDto(Account account) {
+    public static <T> T fromJson(String str, Class<T> type) {
+        ObjectMapper mapper = new ObjectMapper();
+        T obj = null;
+        try {
+            obj = mapper.readValue(str, type);
+        } catch (JsonProcessingException e) {
+            log.error(String.format(
+                    "Error while reading object from JSON. \nString: %s \nType: %s, \nError: %s",
+                    str, type.getName(), e.getMessage()));
+        }
+        return obj;
+    }
+
+    public static AccountResponseDto parseAccountResponseDto(Account account) {
         // TODO Where to handle null?
         if (account == null) {
             return null;
         }
         return AccountResponseDto.builder()
-                .accountId(account.getId())
+                .id(account.getId())
                 .customerId(account.getCustomerId())
-                .balances(parseIntoBalanceDtos(account.getBalances()))
-                .build();
+                .balanceDtos(parseIntoBalanceDtos(account.getBalances())).build();
     }
 
     /**
      * @param accountRequestDto
      * @return Account with null 'id' field.
      */
-    public static Account parseIntoAccount(AccountRequestDto accountRequestDto) {
+    public static Account parseAccount(AccountRequestDto accountRequestDto) {
         if (accountRequestDto == null) {
             return null;
         }
         return Account.builder()
                 .customerId(accountRequestDto.getCustomerId())
                 .country(accountRequestDto.getCountry())
-                .balances(parseIntoBalances(accountRequestDto.getCurrencies()))
-                .build();
+                .balances(parseBalances(accountRequestDto.getCurrencies())).build();
     }
 
 
@@ -72,18 +85,17 @@ public class HttpUtils {
                 .amount(tr.getAmount())
                 .currency(tr.getCurrency())
                 .direction(tr.getDirection())
-                .description(tr.getDescription())
-                .build();
+                .description(tr.getDescription()).build();
     }
 
-    public static Set<Balance> parseIntoBalances(Currency[] currencies) {
-        if (currencies == null || currencies.length == 0) {
+    public static Set<Balance> parseBalances(Currency[] currencies) {
+        if (currencies == null) {
             return new HashSet<>();
         }
-        return parseIntoBalances(new HashSet<>(Arrays.asList(currencies)));
+        return parseBalances(new HashSet<>(Arrays.asList(currencies)));
     }
 
-    public static Set<Balance> parseIntoBalances(Set<Currency> currencies) {
+    public static Set<Balance> parseBalances(Set<Currency> currencies) {
         if (currencies == null || currencies.size() == 0) {
             return new HashSet<>();
         }
@@ -92,8 +104,7 @@ public class HttpUtils {
             balances.add(
                     Balance.builder()
                     .currency(c)
-                    .amount(BigDecimal.ZERO)
-                    .build());
+                    .amount(BigDecimal.ZERO).build());
         }
         return balances;
     }
@@ -107,8 +118,7 @@ public class HttpUtils {
             balanceDtos.add(
                     BalanceDto.builder()
                             .currency(b.getCurrency())
-                            .amount(b.getAmount())
-                            .build()
+                            .amount(b.getAmount()).build()
             );
         }
         return balanceDtos;

@@ -1,9 +1,8 @@
 package com.tuum.app;
 
 import com.tuum.app.constant.Currency;
+import com.tuum.app.dto.AccountResponseDto;
 import com.tuum.app.util.HttpUtils;
-import groovy.util.logging.Slf4j;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,7 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.tuum.app.util.TestData.*;
+import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static com.tuum.app.testutil.MockData.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,7 +40,7 @@ public class MainApplicationEndToEndTest {
 				.andExpectAll(
 						status().isCreated(),
 						content().contentType(MediaType.APPLICATION_JSON),
-						jsonPath("$.account_id", greaterThan(0)),
+						jsonPath("$.id", greaterThan(0)),
 						jsonPath("$.customer_id", is(CUSTOMER_ID), Long.class),
 						jsonPath("$.balances[*].currency",
 								containsInAnyOrder(Currency.getValuesNamesAsStringArray())),
@@ -48,19 +50,35 @@ public class MainApplicationEndToEndTest {
 
 	@Test
 	void Should_ReturnAccount_When_GetAccountById() throws Exception {
+		AtomicLong accountId = new AtomicLong();
 
 		mockMvc.perform(
-				get("/account/{id}", ACCOUNT_ID)
+						post("/account")
+								.contentType(MediaType.APPLICATION_JSON)
+								.content(mockAccountRequestDtoJson())
+								.accept(MediaType.APPLICATION_JSON))
+				.andExpect(
+						status().isCreated())
+				.andDo((r) -> {
+					AccountResponseDto responseDto =
+							HttpUtils.fromJson(
+									r.getResponse().getContentAsString(), AccountResponseDto.class);
+					accountId.set(responseDto.getId());
+				});
+
+
+		mockMvc.perform(
+						get("/account/{id}", accountId)
 								.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpectAll(
 						status().isFound(),
 						content().contentType(MediaType.APPLICATION_JSON),
-						jsonPath("$.account_id", is(ACCOUNT_ID), Long.class),
+						jsonPath("$.id", is(accountId.longValue()), Long.class),
 						jsonPath("$.customer_id", is(CUSTOMER_ID), Long.class),
 						jsonPath("$.balances[*].currency",
 								containsInAnyOrder(Currency.getValuesNamesAsStringArray())),
-						jsonPath("$.balances[*].amount", everyItem(is(0)))
+						jsonPath("$.balances[*].amount", everyItem(is(BigDecimal.ZERO)))
 				);
 	}
 }

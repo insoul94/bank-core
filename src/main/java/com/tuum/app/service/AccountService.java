@@ -28,19 +28,20 @@ public class AccountService {
     }
 
     // TODO: where to check notnull?
+    // TODO: should the interface be added to lock service behaviour?
     public AccountResponseDto createAccount(@NotNull AccountRequestDto requestDto) throws InvalidCurrencyException {
-        log.info(requestDto.toString());
-        Account account = HttpUtils.parseIntoAccount(requestDto);
-        log.info(account.toString());
+        Account account = HttpUtils.parseAccount(requestDto);
+        account.getBalances().forEach(balance -> balance.setAccount(account));
         Account savedAccount = accountRepository.save(account);
-        log.info(savedAccount.toString());
-        AccountResponseDto responseDto = HttpUtils.parseIntoAccountResponseDto(savedAccount);
-        log.info(responseDto.toString());
+        AccountResponseDto responseDto = HttpUtils.parseAccountResponseDto(savedAccount);
         return responseDto;
     }
 
     public AccountResponseDto getAccount(Long id) throws AccountMissingException {
-        return AccountResponseDto.builder().build();
+        Account account = accountRepository.findById(id)
+                .orElseThrow(AccountMissingException::new);
+        AccountResponseDto responseDto = HttpUtils.parseAccountResponseDto(account);
+        return responseDto;
     }
 
     public TransactionResponseDto createTransaction(TransactionRequestDto transactionRequestDto)
@@ -51,10 +52,15 @@ public class AccountService {
             InsufficientFundsException,
             AccountMissingException,
             DescriptionMissingException {
+
+        // optimized search
+        Account proxy = accountRepository.getReferenceById(transactionRequestDto.getAccountId());
+
         return TransactionResponseDto.builder().build();
     }
 
     public List<TransactionResponseDto> getTransactions(Long accountId) throws AccountMissingException {
+        //
         return new ArrayList<TransactionResponseDto>();
     }
 }

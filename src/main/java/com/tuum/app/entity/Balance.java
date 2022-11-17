@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 })
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @Builder
 public class Balance {
@@ -23,7 +22,7 @@ public class Balance {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "fk_account_id")
+    @JoinColumn(name = "fk_account_id", nullable = false)
     private Account account;
 
     @Enumerated(EnumType.STRING)
@@ -35,5 +34,15 @@ public class Balance {
     private BigDecimal amount;
 
     public Balance() {
+    }
+
+    @Override
+    public String toString() {
+        return "Balance{" +
+                "id=" + id +
+                ", fk_account_id=" + account.getId() +
+                ", currency=" + currency +
+                ", amount=" + amount +
+                '}';
     }
 }
