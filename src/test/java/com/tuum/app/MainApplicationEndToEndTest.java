@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.tuum.app.testutil.MockData.*;
+import static com.tuum.app.mocks.DataMock.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,7 +44,7 @@ public class MainApplicationEndToEndTest {
 						jsonPath("$.customer_id", is(CUSTOMER_ID), Long.class),
 						jsonPath("$.balances[*].currency",
 								containsInAnyOrder(Currency.getValuesNamesAsStringArray())),
-						jsonPath("$.balances[*].amount", everyItem(is(0)))
+						jsonPath("$.balances[*].amount", everyItem(is("0.00")))
 				);
 	}
 
@@ -78,7 +78,7 @@ public class MainApplicationEndToEndTest {
 						jsonPath("$.customer_id", is(CUSTOMER_ID), Long.class),
 						jsonPath("$.balances[*].currency",
 								containsInAnyOrder(Currency.getValuesNamesAsStringArray())),
-						jsonPath("$.balances[*].amount", everyItem(is(BigDecimal.ZERO)))
+						jsonPath("$.balances[*].amount", everyItem(is("0.00")))
 				);
 	}
 }

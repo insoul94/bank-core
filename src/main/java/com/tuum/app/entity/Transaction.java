@@ -6,11 +6,13 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 //@Entity
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Transaction {
@@ -28,6 +30,11 @@ public class Transaction {
 
     private String description;
 
-    public Transaction() {
+
+    public static class TransactionBuilder {
+        public TransactionBuilder amount(BigDecimal amount) {
+            this.amount = amount.setScale(2, RoundingMode.HALF_EVEN);
+            return this;
+        }
     }
 }

@@ -10,6 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Account {
@@ -26,7 +27,4 @@ public class Account {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
     private Set<Balance> balances;
-
-    public Account() {
-    }
 }

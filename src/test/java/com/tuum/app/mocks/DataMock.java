@@ -1,11 +1,10 @@
-package com.tuum.app.testutil;
+package com.tuum.app.mocks;
 
 import com.tuum.app.constant.Currency;
 import com.tuum.app.constant.Direction;
 import com.tuum.app.dto.*;
 import com.tuum.app.entity.Account;
-import com.tuum.app.entity.Balance;
-import com.tuum.app.util.HttpUtils;
+import com.tuum.app.mapper.BalanceMapper;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static com.tuum.app.util.HttpUtils.*;
 
-public class MockData {
+public class DataMock {
 
     public final static long ACCOUNT_ID = getRandomLong();
     // Test only positive numbers
@@ -25,7 +24,7 @@ public class MockData {
     public final static String DESCRIPTION = getRandomString(100);
     public final static Currency CURRENCY = getRandomCurrency();
 
-    private MockData() {
+    private DataMock() {
     }
 
     public static long getRandomLong() {
@@ -52,14 +51,16 @@ public class MockData {
                 .id(ACCOUNT_ID)
                 .customerId(CUSTOMER_ID)
                 .country(COUNTRY)
-                .balances(HttpUtils.parseBalances(Currency.values())).build();
+                .balances(BalanceMapper.toEntitySet(Currency.values()))
+                .build();
     }
 
     public static AccountRequestDto mockAccountRequestDto() {
         return AccountRequestDto.builder()
                 .customerId(CUSTOMER_ID)
                 .country(COUNTRY)
-                .currencies(Currency.valuesAsSet()).build();
+                .currencies(Currency.valuesAsSet())
+                .build();
     }
 
     public static String mockAccountRequestDtoJson() {
@@ -70,18 +71,18 @@ public class MockData {
         return AccountResponseDto.builder()
                 .id(ACCOUNT_ID)
                 .customerId(CUSTOMER_ID)
-                .balanceDtos(mockBalanceDtoSet()).build();
+                .balanceDtos(mockBalanceDtoSet())
+                .build();
     }
 
     public static Set<BalanceDto> mockBalanceDtoSet() {
-        Set<BalanceDto> balanceDtos = new HashSet<>();
-        for (Currency cur : Currency.values()) {
-            BalanceDto dto = new BalanceDto();
-            dto.setCurrency(cur);
-            dto.setAmount(BigDecimal.ZERO);
-            balanceDtos.add(dto);
-        }
-        return balanceDtos;
+        return Arrays.stream(Currency.values())
+                .map(cur ->
+                        BalanceDto.builder()
+                                .currency(cur)
+                                .amount(BigDecimal.ZERO.toString())
+                                .build())
+                .collect(Collectors.toSet());
     }
 
     public static TransactionRequestDto mockTransactionRequestDto() {
@@ -90,7 +91,8 @@ public class MockData {
                 .amount(AMOUNT)
                 .currency(CURRENCY)
                 .direction(Direction.IN)
-                .description(DESCRIPTION).build();
+                .description(DESCRIPTION)
+                .build();
     }
 
     public static TransactionResponseDto mockTransactionResponseDto() {
@@ -100,7 +102,8 @@ public class MockData {
                 .currency(CURRENCY)
                 .direction(Direction.IN)
                 .description(DESCRIPTION)
-                .balanceAfter(AMOUNT).build();
+                .balanceAfter(AMOUNT)
+                .build();
     }
 
     public static List<TransactionResponseDto> mockTransactionResponseDtoList() {

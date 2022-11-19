@@ -42,7 +42,7 @@ public class Controller {
             path = "/account/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
 
-    public ResponseEntity<AccountResponseDto> getAccount(@PathVariable("id") Long id)
+    public ResponseEntity<AccountResponseDto> readAccount(@PathVariable("id") Long id)
             throws AccountMissingException {
 
         return new ResponseEntity<>(
@@ -75,7 +75,7 @@ public class Controller {
             path = "transaction/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE)
 
-    public ResponseEntity<List<TransactionResponseDto>> getTransactions(
+    public ResponseEntity<List<TransactionResponseDto>> readTransactions(
             @PathVariable("id") Long accountId)
             throws AccountMissingException {
 

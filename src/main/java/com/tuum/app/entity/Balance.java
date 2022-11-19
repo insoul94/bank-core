@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 @Table(name = "balance", indexes = {
@@ -34,6 +35,13 @@ public class Balance {
     private BigDecimal amount;
 
     public Balance() {
+    }
+
+    public static class BalanceBuilder {
+        public BalanceBuilder amount(BigDecimal amount) {
+            this.amount = amount.setScale(2, RoundingMode.HALF_EVEN);
+            return this;
+        }
     }
 
     @Override
