@@ -30,8 +30,7 @@ public class Balance {
     @Column(nullable = false, updatable = false)
     private Currency currency;
 
-    // TODO: precision, scale
-    @Column(nullable = false)
+    @Column(nullable = false, scale = 2)
     private BigDecimal amount;
 
     public Balance() {

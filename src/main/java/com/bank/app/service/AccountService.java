@@ -32,23 +32,15 @@ public class AccountService {
     // TODO: should the interface be added to lock service behaviour?
     public AccountResponseDto createAccount(@NotNull AccountRequestDto requestDto) throws InvalidCurrencyException {
         Account account = AccountMapper.toEntity(requestDto);
-
-        // TODO: should fields assignment be implicit?
-        account.getBalances()
-                .forEach(balance ->
-                        balance.setAccount(account));
-
         Account savedAccount = accountRepository.save(account);
-        AccountResponseDto responseDto = AccountMapper.toResponseDto(savedAccount);
-        return responseDto;
+        return AccountMapper.toResponseDto(savedAccount);
     }
 
-    public AccountResponseDto getAccount(Long id) throws AccountMissingException {
+    public AccountResponseDto getAccount(@NotNull Long id) throws AccountMissingException {
         Account account = accountRepository.findById(id)
                 .orElseThrow(AccountMissingException::new);
 
-        AccountResponseDto responseDto = AccountMapper.toResponseDto(account);
-        return responseDto;
+        return AccountMapper.toResponseDto(account);
     }
 
     public TransactionResponseDto createTransaction(TransactionRequestDto transactionRequestDto)

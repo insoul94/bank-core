@@ -15,7 +15,7 @@ public class TransactionMapper {
         }
         return TransactionResponseDto.builder()
                 .id(entity.getId())
-                .accountId(entity.getAccountId())
+                .accountId(entity.getAccount().getId())
                 .amount(entity.getAmount().toString())
                 .currency(entity.getCurrency())
                 .direction(entity.getDirection())

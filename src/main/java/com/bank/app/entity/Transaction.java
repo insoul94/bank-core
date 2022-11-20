@@ -4,10 +4,14 @@ import com.bank.app.constant.Currency;
 import com.bank.app.constant.Direction;
 import lombok.*;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-//@Entity
+@Entity
+@Table(name = "transaction", indexes = {
+        @Index(name = "fk_account_id_idx", columnList = "fk_account_id")
+})
 @Getter
 @Setter
 @ToString
@@ -16,17 +20,27 @@ import java.math.RoundingMode;
 @Builder
 public class Transaction {
 
-    //@GenerationType.SEQUENCE?
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private Long id;
 
-    private Long accountId;
+    @ManyToOne
+    @JoinColumn(name = "fk_account_id", nullable = false, updatable = false)
+    private Account account;
 
+    @Column(nullable = false, updatable = false, scale = 2)
     private BigDecimal amount;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = false)
     private Currency currency;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = false)
     private Direction direction;
 
+    @Column(updatable = false)
     private String description;
 
 
