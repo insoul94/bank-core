@@ -30,19 +30,18 @@ public class MainApplicationEndToEndTest {
 	@Test
 	void Should_ReturnAccount_When_PostAccount() throws Exception {
 
-		mockMvc.perform(
-						post("/account")
-								.contentType(MediaType.APPLICATION_JSON)
-								.content(mockAccountRequestDtoJson())
-								.accept(MediaType.APPLICATION_JSON))
-				.andDo(print())
+		mockMvc.perform(post("/account")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(mockAccountRequestDtoJson())
+						.accept(MediaType.APPLICATION_JSON))
+
 				.andExpectAll(
 						status().isCreated(),
 						content().contentType(MediaType.APPLICATION_JSON),
 						jsonPath("$.id", greaterThan(0)),
 						jsonPath("$.customer_id", is(CUSTOMER_ID), Long.class),
 						jsonPath("$.balances[*].currency",
-								containsInAnyOrder(Currency.getValuesAsStringArray())),
+								containsInAnyOrder(Currency.valuesAsStringArray())),
 						jsonPath("$.balances[*].amount", everyItem(is("0.00")))
 				);
 	}
@@ -51,13 +50,12 @@ public class MainApplicationEndToEndTest {
 	void Should_ReturnAccount_When_GetAccountById() throws Exception {
 		AtomicLong accountId = new AtomicLong();
 
-		mockMvc.perform(
-						post("/account")
-								.contentType(MediaType.APPLICATION_JSON)
-								.content(mockAccountRequestDtoJson())
-								.accept(MediaType.APPLICATION_JSON))
-				.andExpect(
-						status().isCreated())
+		mockMvc.perform(post("/account")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(mockAccountRequestDtoJson())
+						.accept(MediaType.APPLICATION_JSON))
+
+				.andExpect(status().isCreated())
 				.andDo((r) -> {
 					AccountResponseDto responseDto = HttpUtils.fromJson(
 							r.getResponse().getContentAsString(), AccountResponseDto.class);
@@ -65,16 +63,15 @@ public class MainApplicationEndToEndTest {
 				});
 
 
-		mockMvc.perform(
-						get("/account/{id}", accountId)
-								.accept(MediaType.APPLICATION_JSON))
-				.andDo(print())
+		mockMvc.perform(get("/account/{id}", accountId)
+						.accept(MediaType.APPLICATION_JSON))
+
 				.andExpectAll(
 						status().isFound(),
 						content().contentType(MediaType.APPLICATION_JSON),
 						jsonPath("$.id", is(accountId.longValue()), Long.class),
 						jsonPath("$.customer_id", is(CUSTOMER_ID), Long.class),
-						jsonPath("$.balances[*].currency", containsInAnyOrder(Currency.getValuesAsStringArray())),
+						jsonPath("$.balances[*].currency", containsInAnyOrder(Currency.valuesAsStringArray())),
 						jsonPath("$.balances[*].amount", everyItem(is("0.00")))
 				);
 	}

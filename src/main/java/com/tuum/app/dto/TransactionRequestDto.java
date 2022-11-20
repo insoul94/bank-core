@@ -9,8 +9,6 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @Data
 @Builder
@@ -21,8 +19,7 @@ public class TransactionRequestDto {
     private Long accountId;
 
     @NotNull
-    @Positive
-    private BigDecimal amount;
+    private String amount;
 
     @NotNull
     private Currency currency;
@@ -33,10 +30,4 @@ public class TransactionRequestDto {
     @NotBlank
     private String description;
 
-    public static class TransactionRequestDtoBuilder {
-        public TransactionRequestDtoBuilder amount(BigDecimal amount) {
-            this.amount = amount.setScale(2, RoundingMode.HALF_EVEN);
-            return this;
-        }
-    }
 }

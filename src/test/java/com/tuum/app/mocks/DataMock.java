@@ -8,6 +8,7 @@ import com.tuum.app.entity.Balance;
 import com.tuum.app.mapper.BalanceMapper;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -19,7 +20,7 @@ public class DataMock {
     // Test only positive numbers
     public final static long CUSTOMER_ID = getRandomLong();
     public final static long TRANSACTION_ID = getRandomLong();
-    public final static BigDecimal AMOUNT = BigDecimal.valueOf(getRandomLong());
+    public final static String AMOUNT = String.valueOf(getRandomAmount());
     public final static String COUNTRY = getRandomCountry();
     public final static String DESCRIPTION = getRandomString(100);
     public final static Currency CURRENCY = getRandomCurrency();
@@ -27,6 +28,10 @@ public class DataMock {
     private DataMock() {
     }
 
+    public static BigDecimal getRandomAmount() {
+        BigDecimal n = new BigDecimal(getRandomLong()).setScale(2, RoundingMode.HALF_EVEN);
+        return n.divide(BigDecimal.valueOf(100), RoundingMode.HALF_EVEN);
+    }
     public static long getRandomLong() {
         return new Random().nextLong(Long.SIZE - 1);
     }
@@ -46,6 +51,13 @@ public class DataMock {
         return Currency.values()[new Random().nextInt(4)];
     }
 
+    public static Balance mockBalance() {
+        return Balance.builder()
+                .account(mockAccount())
+                .currency(CURRENCY)
+                .amount(new BigDecimal(AMOUNT))
+                .build();
+    }
     public static Set<Balance> mockBalanceSet() {
         return BalanceMapper.toEntitySet(Currency.valuesAsSet(), mockAccount());
     }

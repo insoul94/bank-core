@@ -6,9 +6,6 @@ import com.tuum.app.constant.Direction;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 @Data
 @Builder
 public class TransactionResponseDto {
@@ -18,7 +15,7 @@ public class TransactionResponseDto {
     @JsonProperty("account_id)")
     private Long accountId;
 
-    private BigDecimal amount;
+    private String amount;
 
     private Currency currency;
 
@@ -26,17 +23,6 @@ public class TransactionResponseDto {
 
     private String description;
 
-    private BigDecimal balanceAfter;
+    private String balanceAfter;
 
-
-    public static class TransactionResponseDtoBuilder {
-        public TransactionResponseDtoBuilder amount(BigDecimal amount) {
-            this.amount = amount.setScale(2, RoundingMode.HALF_EVEN);
-            return this;
-        }
-        public TransactionResponseDtoBuilder balanceAfter(BigDecimal balanceAfter) {
-            this.balanceAfter = balanceAfter.setScale(2, RoundingMode.HALF_EVEN);
-            return this;
-        }
-    }
 }

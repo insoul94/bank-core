@@ -12,6 +12,9 @@ import java.util.Set;
 public class BalanceMapper {
 
     public static Balance toEntity(Currency currency, Account account) {
+        if (currency == null || account == null) {
+            return new Balance();
+        }
         return Balance.builder()
                 .account(account)
                 .currency(currency)
@@ -20,7 +23,7 @@ public class BalanceMapper {
     }
 
     public static Set<Balance> toEntitySet(Set<Currency> currencySet, Account account) {
-        if (currencySet == null || currencySet.size() == 0) {
+        if (currencySet == null || currencySet.size() == 0 || account == null) {
             return new HashSet<>();
         }
         Set<Balance> balanceSet = new HashSet<>();
@@ -33,6 +36,10 @@ public class BalanceMapper {
     }
 
     public static BalanceDto toDto(Balance entity) {
+        if (entity == null) {
+            return new BalanceDto();
+        }
+        // TODO: CHECK HERE!!!!
         String amountStr = entity.getAmount().toString();
         return BalanceDto.builder()
                 .currency(entity.getCurrency())
