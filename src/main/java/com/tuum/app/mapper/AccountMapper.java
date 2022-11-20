@@ -3,20 +3,11 @@ package com.tuum.app.mapper;
 import com.tuum.app.dto.AccountRequestDto;
 import com.tuum.app.dto.AccountResponseDto;
 import com.tuum.app.entity.Account;
+import com.tuum.app.entity.Balance;
+
+import java.util.Set;
 
 public class AccountMapper {
-
-    public static AccountResponseDto toResponseDto(Account entity) {
-        // TODO Where to handle null? Or return empty object?
-        if (entity == null) {
-            return null;
-        }
-        return AccountResponseDto.builder()
-                .id(entity.getId())
-                .customerId(entity.getCustomerId())
-                .balanceDtos(BalanceMapper.toDtoSet(entity.getBalances()))
-                .build();
-    }
 
     /**
      * @param requestDto
@@ -24,12 +15,26 @@ public class AccountMapper {
      */
     public static Account toEntity(AccountRequestDto requestDto) {
         if (requestDto == null) {
-            return null;
+            return Account.builder().build();
         }
-        return Account.builder()
+        Account account = Account.builder()
                 .customerId(requestDto.getCustomerId())
                 .country(requestDto.getCountry())
-                .balances(BalanceMapper.toEntitySet(requestDto.getCurrencies()))
+                .build();
+        Set<Balance> balanceSet = BalanceMapper.toEntitySet(requestDto.getCurrencies(), account);
+        account.setBalances(balanceSet);
+        return account;
+    }
+
+    public static AccountResponseDto toResponseDto(Account entity) {
+        // TODO Where to handle null? Or return empty object?
+        if (entity == null) {
+            return AccountResponseDto.builder().build();
+        }
+        return AccountResponseDto.builder()
+                .id(entity.getId())
+                .customerId(entity.getCustomerId())
+                .balanceDtoSet(BalanceMapper.toDtoSet(entity.getBalances()))
                 .build();
     }
 }

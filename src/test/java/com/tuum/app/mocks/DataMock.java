@@ -4,12 +4,12 @@ import com.tuum.app.constant.Currency;
 import com.tuum.app.constant.Direction;
 import com.tuum.app.dto.*;
 import com.tuum.app.entity.Account;
+import com.tuum.app.entity.Balance;
 import com.tuum.app.mapper.BalanceMapper;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.tuum.app.util.HttpUtils.*;
 
@@ -46,13 +46,22 @@ public class DataMock {
         return Currency.values()[new Random().nextInt(4)];
     }
 
+    public static Set<Balance> mockBalanceSet() {
+        return BalanceMapper.toEntitySet(Currency.valuesAsSet(), mockAccount());
+    }
+
+    public static Set<BalanceDto> mockBalanceDtoSet() {
+        return BalanceMapper.toDtoSet(mockBalanceSet());
+    }
+
     public static Account mockAccount() {
-        return Account.builder()
+        Account account = Account.builder()
                 .id(ACCOUNT_ID)
                 .customerId(CUSTOMER_ID)
                 .country(COUNTRY)
-                .balances(BalanceMapper.toEntitySet(Currency.values()))
                 .build();
+        account.setBalances(BalanceMapper.toEntitySet(Currency.valuesAsSet(), account));
+        return account;
     }
 
     public static AccountRequestDto mockAccountRequestDto() {
@@ -71,18 +80,8 @@ public class DataMock {
         return AccountResponseDto.builder()
                 .id(ACCOUNT_ID)
                 .customerId(CUSTOMER_ID)
-                .balanceDtos(mockBalanceDtoSet())
+                .balanceDtoSet(mockBalanceDtoSet())
                 .build();
-    }
-
-    public static Set<BalanceDto> mockBalanceDtoSet() {
-        return Arrays.stream(Currency.values())
-                .map(cur ->
-                        BalanceDto.builder()
-                                .currency(cur)
-                                .amount(BigDecimal.ZERO.toString())
-                                .build())
-                .collect(Collectors.toSet());
     }
 
     public static TransactionRequestDto mockTransactionRequestDto() {

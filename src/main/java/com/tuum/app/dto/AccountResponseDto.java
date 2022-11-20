@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class AccountResponseDto {
 
@@ -22,8 +24,5 @@ public class AccountResponseDto {
     private Long customerId;
 
     @JsonProperty("balances")
-    private Set<BalanceDto> balanceDtos;
-
-    public AccountResponseDto() {
-    }
+    private Set<BalanceDto> balanceDtoSet;
 }

@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.tuum.app.mocks.DataMock.*;
@@ -43,7 +42,7 @@ public class MainApplicationEndToEndTest {
 						jsonPath("$.id", greaterThan(0)),
 						jsonPath("$.customer_id", is(CUSTOMER_ID), Long.class),
 						jsonPath("$.balances[*].currency",
-								containsInAnyOrder(Currency.getValuesNamesAsStringArray())),
+								containsInAnyOrder(Currency.getValuesAsStringArray())),
 						jsonPath("$.balances[*].amount", everyItem(is("0.00")))
 				);
 	}
@@ -60,9 +59,8 @@ public class MainApplicationEndToEndTest {
 				.andExpect(
 						status().isCreated())
 				.andDo((r) -> {
-					AccountResponseDto responseDto =
-							HttpUtils.fromJson(
-									r.getResponse().getContentAsString(), AccountResponseDto.class);
+					AccountResponseDto responseDto = HttpUtils.fromJson(
+							r.getResponse().getContentAsString(), AccountResponseDto.class);
 					accountId.set(responseDto.getId());
 				});
 
@@ -76,8 +74,7 @@ public class MainApplicationEndToEndTest {
 						content().contentType(MediaType.APPLICATION_JSON),
 						jsonPath("$.id", is(accountId.longValue()), Long.class),
 						jsonPath("$.customer_id", is(CUSTOMER_ID), Long.class),
-						jsonPath("$.balances[*].currency",
-								containsInAnyOrder(Currency.getValuesNamesAsStringArray())),
+						jsonPath("$.balances[*].currency", containsInAnyOrder(Currency.getValuesAsStringArray())),
 						jsonPath("$.balances[*].amount", everyItem(is("0.00")))
 				);
 	}
