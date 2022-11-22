@@ -37,7 +37,7 @@ public class AccountController {
         if (bindingResult.hasFieldErrors("currency")) {
             throw new InvalidCurrencyException();
         } else if (bindingResult.hasErrors()) {
-            throw new UserException("Invalid input");
+            throw new UserException();
         }
 
         return new ResponseEntity<>(

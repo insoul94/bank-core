@@ -42,7 +42,7 @@ class AccountMapperTest {
     }
 
     @Test
-    @DisplayName("toEntity() - success on null")
+    @DisplayName("toEntity() - return empty Account on null")
     void Given_Null_When_ToEntity_Then_ReturnEmptyAccount() {
         Account entity = AccountMapper.toEntity(null);
 
@@ -77,7 +77,7 @@ class AccountMapperTest {
     }
 
     @Test
-    @DisplayName("toResponseDto() - success on null")
+    @DisplayName("toResponseDto() - return empty AccountResponseDto on null")
     void Given_Null_When_ToResponseDto_Then_ReturnEmptyAccountResponseDto() {
         AccountResponseDto responseDto = AccountMapper.toResponseDto(null);
 

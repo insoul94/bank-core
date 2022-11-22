@@ -33,7 +33,7 @@ class BalanceMapperTest {
     }
 
     @Test
-    @DisplayName("toEntity() - success on null Currency")
+    @DisplayName("toEntity() - return empty Balance on null Currency")
     void Given_NullAndAccount_When_ToEntity_Then_ReturnEmptyBalance() {
         Account account = mockAccount();
 
@@ -47,7 +47,7 @@ class BalanceMapperTest {
     }
 
     @Test
-    @DisplayName("toEntity() - success on null Account")
+    @DisplayName("toEntity() - return empty Balance on null Account")
     void Given_CurrencyAndNull_When_ToEntity_Then_ReturnEmptyBalance() {
         Balance entity = BalanceMapper.toEntity(Currency.EUR, null);
 
@@ -78,7 +78,7 @@ class BalanceMapperTest {
     }
 
     @Test
-    @DisplayName("toEntitySet() - success on empty set")
+    @DisplayName("toEntitySet() - return empty HashSet on empty set")
     void Given_EmptyCurrencySet_When_ToEntitySet_Then_ReturnEmptySet() {
         Account account = mockAccount();
 
@@ -88,7 +88,7 @@ class BalanceMapperTest {
     }
 
     @Test
-    @DisplayName("toEntitySet() - success on null Account")
+    @DisplayName("toEntitySet() - return empty Balance on null Account")
     void Given_CurrencySetAndNull_When_ToEntitySet_Then_ReturnEmptySet() {
         Set<Balance> entitySet = BalanceMapper.toEntitySet(Currency.valuesAsSet(), null);
 
@@ -108,7 +108,7 @@ class BalanceMapperTest {
     }
 
     @Test
-    @DisplayName("toDto() - success on null")
+    @DisplayName("toDto() - return empty BalanceDto on null")
     void Given_Null_When_ToDto_Then_ReturnEmptyBalanceDto() {
         BalanceDto dto = BalanceMapper.toDto(null);
 
@@ -132,9 +132,9 @@ class BalanceMapperTest {
     }
 
     @Test
-    @DisplayName("toDtoSet() - success on empty set")
+    @DisplayName("toDtoSet() - return empty HashSet on empty set")
     void Given_EmptySet_When_ToDtoSet_Then_ReturnEmptySet() {
-        Set<BalanceDto> dtoSet = BalanceMapper.toDtoSet(null);
+        Set<BalanceDto> dtoSet = BalanceMapper.toDtoSet(new HashSet<>());
 
         assertThat(dtoSet.size(), is(0));
     }

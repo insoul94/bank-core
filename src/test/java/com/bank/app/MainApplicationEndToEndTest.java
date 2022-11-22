@@ -3,6 +3,7 @@ package com.bank.app;
 import com.bank.app.constant.Currency;
 import com.bank.app.dto.AccountResponseDto;
 import com.bank.app.util.HttpUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,6 +29,7 @@ public class MainApplicationEndToEndTest {
 	private MockMvc mockMvc;
 
 	@Test
+	@DisplayName("POST /account - created")
 	void Given_CorrectInput_When_PostAccount_Then_Success() throws Exception {
 
 		mockMvc.perform(post("/account")
@@ -47,6 +49,7 @@ public class MainApplicationEndToEndTest {
 	}
 
 	@Test
+	@DisplayName("POST /account with invalid currency - bad request")
 	void Given_InvalidCurrency_When_PostAccount_Then_BadRequest() throws Exception {
 
 		mockMvc.perform(post("/account")
@@ -60,7 +63,8 @@ public class MainApplicationEndToEndTest {
 	}
 
 	@Test
-	void Should_ReturnAccount_When_GetAccountById() throws Exception {
+	@DisplayName("GET /account/{id} - found")
+	void Given_ExistingAccountId_When_GetAccount_Then_Success() throws Exception {
 		AtomicLong accountId = new AtomicLong();
 
 		mockMvc.perform(post("/account")
