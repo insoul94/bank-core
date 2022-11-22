@@ -1,4 +1,10 @@
 package com.bank.app.exception;
 
-public class InsufficientFundsException extends Exception {
+import com.bank.app.exception.UserException;
+
+public class InsufficientFundsException extends UserException {
+
+    public InsufficientFundsException(String message) {
+        super(message);
+    }
 }

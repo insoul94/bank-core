@@ -30,15 +30,15 @@ public class AccountService {
 
     // TODO: where to check notnull?
     // TODO: should the interface be added to lock service behaviour?
-    public AccountResponseDto createAccount(@NotNull AccountRequestDto requestDto) throws InvalidCurrencyException {
+    public AccountResponseDto createAccount(@NotNull AccountRequestDto requestDto) {
         Account account = AccountMapper.toEntity(requestDto);
         Account savedAccount = accountRepository.save(account);
         return AccountMapper.toResponseDto(savedAccount);
     }
 
-    public AccountResponseDto getAccount(@NotNull Long id) throws AccountMissingException {
+    public AccountResponseDto readAccount(@NotNull Long id) throws AccountNotFoundException {
         Account account = accountRepository.findById(id)
-                .orElseThrow(AccountMissingException::new);
+                .orElseThrow(() -> new AccountNotFoundException("Account #" + id + " not found"));
 
         return AccountMapper.toResponseDto(account);
     }
@@ -58,7 +58,7 @@ public class AccountService {
         return TransactionResponseDto.builder().build();
     }
 
-    public List<TransactionResponseDto> getTransactions(Long accountId) throws AccountMissingException {
+    public List<TransactionResponseDto> readTransactions(Long accountId) throws AccountMissingException {
         //
         return new ArrayList<TransactionResponseDto>();
     }

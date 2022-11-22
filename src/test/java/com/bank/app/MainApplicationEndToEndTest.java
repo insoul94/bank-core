@@ -28,13 +28,13 @@ public class MainApplicationEndToEndTest {
 	private MockMvc mockMvc;
 
 	@Test
-	void Should_ReturnAccount_When_PostAccount() throws Exception {
+	void Given_CorrectInput_When_PostAccount_Then_Success() throws Exception {
 
 		mockMvc.perform(post("/account")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(mockAccountRequestDtoJson())
 						.accept(MediaType.APPLICATION_JSON))
-
+				.andDo(print())
 				.andExpectAll(
 						status().isCreated(),
 						content().contentType(MediaType.APPLICATION_JSON),
@@ -47,6 +47,19 @@ public class MainApplicationEndToEndTest {
 	}
 
 	@Test
+	void Given_InvalidCurrency_When_PostAccount_Then_BadRequest() throws Exception {
+
+		mockMvc.perform(post("/account")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(mockAccountRequestWithInvalidCurrencyJson())
+						.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpectAll(
+						status().isBadRequest()
+				);
+	}
+
+	@Test
 	void Should_ReturnAccount_When_GetAccountById() throws Exception {
 		AtomicLong accountId = new AtomicLong();
 
@@ -54,7 +67,7 @@ public class MainApplicationEndToEndTest {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(mockAccountRequestDtoJson())
 						.accept(MediaType.APPLICATION_JSON))
-
+				.andDo(print())
 				.andExpect(status().isCreated())
 				.andDo((r) -> {
 					AccountResponseDto responseDto = HttpUtils.fromJson(
@@ -65,7 +78,7 @@ public class MainApplicationEndToEndTest {
 
 		mockMvc.perform(get("/account/{id}", accountId)
 						.accept(MediaType.APPLICATION_JSON))
-
+				.andDo(print())
 				.andExpectAll(
 						status().isFound(),
 						content().contentType(MediaType.APPLICATION_JSON),

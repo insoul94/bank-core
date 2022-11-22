@@ -1,4 +1,10 @@
 package com.bank.app.exception;
 
-public class InvalidAmountException extends Exception {
+import com.bank.app.exception.UserException;
+
+public class InvalidAmountException extends UserException {
+
+    public InvalidAmountException(String message) {
+        super(message);
+    }
 }

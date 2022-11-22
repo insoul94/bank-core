@@ -88,6 +88,10 @@ public class DataMock {
         return toJson(mockAccountRequestDto());
     }
 
+    public static String mockAccountRequestWithInvalidCurrencyJson() {
+        return "{\"customer_id\":1, country:\"Estonia\", \"currencies\":[\"ABC\"]}";
+    }
+
     public static AccountResponseDto mockAccountResponseDto() {
         return AccountResponseDto.builder()
                 .id(ACCOUNT_ID)

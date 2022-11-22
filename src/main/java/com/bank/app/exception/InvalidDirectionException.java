@@ -1,4 +1,10 @@
 package com.bank.app.exception;
 
-public class InvalidDirectionException extends Exception {
+import com.bank.app.exception.UserException;
+
+public class InvalidDirectionException extends UserException {
+
+    public InvalidDirectionException(String message) {
+        super(message);
+    }
 }

@@ -9,17 +9,18 @@ import com.bank.app.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-public class Controller {
+public class AccountController {
 
     private final AccountService accountService;
 
-    public Controller(AccountService accountService) {
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -31,8 +32,14 @@ public class Controller {
             produces = MediaType.APPLICATION_JSON_VALUE)
 
     public ResponseEntity<AccountResponseDto> createAccount(
-            @RequestBody @Valid AccountRequestDto accountRequestDto)
+            @RequestBody @Valid AccountRequestDto accountRequestDto, BindingResult bindingResult)
             throws InvalidCurrencyException {
+
+        if (bindingResult.hasFieldErrors("currency")) {
+            throw new InvalidCurrencyException();
+        } else if (bindingResult.hasErrors()) {
+            throw new UserException("Invalid input");
+        }
 
         return new ResponseEntity<>(
                 accountService.createAccount(accountRequestDto), HttpStatus.CREATED);
@@ -43,10 +50,10 @@ public class Controller {
             produces = MediaType.APPLICATION_JSON_VALUE)
 
     public ResponseEntity<AccountResponseDto> readAccount(@PathVariable("id") Long id)
-            throws AccountMissingException {
+            throws AccountNotFoundException {
 
         return new ResponseEntity<>(
-                accountService.getAccount(id), HttpStatus.FOUND);
+                accountService.readAccount(id), HttpStatus.FOUND);
     }
 
 
@@ -80,7 +87,7 @@ public class Controller {
             throws AccountMissingException {
 
         return new ResponseEntity<>(
-                accountService.getTransactions(accountId),
+                accountService.readTransactions(accountId),
                 HttpStatus.FOUND);
     }
 }
