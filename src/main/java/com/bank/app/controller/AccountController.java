@@ -25,7 +25,6 @@ public class AccountController {
     }
 
 
-
     @PostMapping(
             path = "account",
             consumes = MediaType.APPLICATION_JSON_VALUE,

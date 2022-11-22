@@ -1,6 +1,6 @@
 package com.bank.app.exception;
 
-public class SystemException extends RuntimeException{
+public class SystemException extends AppException{
     public SystemException() {
         this("Internal server error");
     }
