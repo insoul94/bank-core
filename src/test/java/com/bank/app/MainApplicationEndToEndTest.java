@@ -97,6 +97,7 @@ public class MainApplicationEndToEndTest {
 				});
 		// When
 		mockMvc.perform(get("/account/{id}", accountId)
+						.contentType(MediaType.TEXT_HTML)
 						.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				// Then
@@ -115,6 +116,7 @@ public class MainApplicationEndToEndTest {
 	void Given_NotExistingAccountId_When_GetAccount_Then_BadRequest() throws Exception {
 
 		mockMvc.perform(get("/account/{id}", getRandomLong())
+						.contentType(MediaType.TEXT_HTML)
 						.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 

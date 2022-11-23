@@ -46,6 +46,7 @@ public class AccountController {
 
     @GetMapping(
             path = "/account/{id}",
+            consumes = MediaType.TEXT_HTML_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
 
     public ResponseEntity<AccountResponseDto> readAccount(@PathVariable("id") Long id)
@@ -79,7 +80,8 @@ public class AccountController {
 
     @GetMapping(
             path = "transaction/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+            consumes = MediaType.TEXT_HTML_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
 
     public ResponseEntity<List<TransactionResponseDto>> readTransactions(
             @PathVariable("id") Long accountId)

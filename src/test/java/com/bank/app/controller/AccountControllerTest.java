@@ -25,21 +25,18 @@ import static com.bank.app.mocks.DataMock.*;
 @ExtendWith(MockitoExtension.class)
 class AccountControllerTest {
 
-    @Mock
-    private AccountService accountService;
-
     @InjectMocks
     private AccountController accountController;
 
+    @Mock
+    private AccountService accountService;
+
+    @Mock
     private BindingResult bindingResult;
 
-    @BeforeEach
-    void setUp() {
-        bindingResult = mock(BindingResult.class);
-    }
 
     @Test
-    @DisplayName("createAccount - success")
+    @DisplayName("createAccount() - success")
     void Given_AccountDto_When_CreateAccount_Then_ReturnAccount() {
         AccountRequestDto request = mockAccountRequestDto();
         AccountResponseDto response = mockAccountResponseDto();
@@ -51,7 +48,7 @@ class AccountControllerTest {
     }
 
     @Test
-    @DisplayName("createAccount - InvalidCurrencyException on invalid currency")
+    @DisplayName("createAccount() - InvalidCurrencyException on invalid currency")
     void Given_InvalidCurrency_When_CreateAccount_Then_ThrowInvalidCurrencyException() {
         AccountRequestDto request = mockAccountRequestDto();
         when(bindingResult.hasFieldErrors("currency")).thenReturn(true);
@@ -60,7 +57,7 @@ class AccountControllerTest {
     }
 
     @Test
-    @DisplayName("readAccount - success")
+    @DisplayName("readAccount() - success")
     void Given_AccountId_When_ReadAccount_Then_ReturnAccount() {
         AccountResponseDto response = mockAccountResponseDto();
         when(accountService.readAccount(ACCOUNT_ID)).thenReturn(response);
@@ -71,22 +68,19 @@ class AccountControllerTest {
     }
 
     @Test
-    @DisplayName("createTransaction - success")
-    void Given_TransactionRequestDto_When_CreateTransaction_Then_ReturnTransactionResponseDto()
-            // TODO: group exceptions
-            throws AccountMissingException, InvalidAmountException, InsufficientFundsException, InvalidDirectionException, DescriptionMissingException, InvalidCurrencyException {
+    @DisplayName("createTransaction() - success")
+    void Given_TransactionRequestDto_When_CreateTransaction_Then_ReturnTransactionResponseDto() throws UserException {
+        TransactionRequestDto request = mockTransactionRequestDto();
+        TransactionResponseDto response = mockTransactionResponseDto();
+        when(accountService.createTransaction(request)).thenReturn(response);
 
-                TransactionRequestDto request = mockTransactionRequestDto();
-                TransactionResponseDto response = mockTransactionResponseDto();
-                when(accountService.createTransaction(request)).thenReturn(response);
+        TransactionResponseDto actual = accountController.createTransaction(request).getBody();
 
-                TransactionResponseDto actual = accountController.createTransaction(request).getBody();
-
-                assertThat(actual).isEqualTo(response);
-            }
+        assertThat(actual).isEqualTo(response);
+    }
 
     @Test
-    @DisplayName("readTransaction - success")
+    @DisplayName("readTransaction() - success")
     void Given_AccountId_When_ReadTransaction_Then_ReturnTransactionList() throws AccountMissingException {
         List<TransactionResponseDto> response = mockTransactionResponseDtoList();
         when(accountService.readTransactions(ACCOUNT_ID)).thenReturn(response);

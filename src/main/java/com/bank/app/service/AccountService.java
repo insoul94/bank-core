@@ -38,7 +38,7 @@ public class AccountService {
 
     public AccountResponseDto readAccount(Long id) throws AccountNotFoundException {
         Account account = accountRepository.findById(id)
-                .orElseThrow(() -> new AccountNotFoundException("Account #" + id + " not found"));
+                .orElseThrow(() -> new AccountNotFoundException(id));
         return AccountMapper.toResponseDto(account);
     }
 
