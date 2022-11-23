@@ -2,7 +2,9 @@ package com.bank.app;
 
 import com.bank.app.constant.Currency;
 import com.bank.app.dto.AccountResponseDto;
+import com.bank.app.repository.AccountRepository;
 import com.bank.app.util.HttpUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,15 @@ public class MainApplicationEndToEndTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
+
+    @AfterEach
+    void cleanUp() {
+        accountRepository.deleteAll();
+    }
+
 	@Test
 	@DisplayName("POST /account - created")
 	void Given_CorrectInput_When_PostAccount_Then_Success() throws Exception {
@@ -37,6 +48,7 @@ public class MainApplicationEndToEndTest {
 						.content(mockAccountRequestDtoJson())
 						.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
+
 				.andExpectAll(
 						status().isCreated(),
 						content().contentType(MediaType.APPLICATION_JSON),
@@ -48,8 +60,9 @@ public class MainApplicationEndToEndTest {
 				);
 	}
 
+
 	@Test
-	@DisplayName("POST /account with invalid currency - bad request")
+	@DisplayName("POST /account - bad request on invalid currency")
 	void Given_InvalidCurrency_When_PostAccount_Then_BadRequest() throws Exception {
 
 		mockMvc.perform(post("/account")
@@ -57,14 +70,17 @@ public class MainApplicationEndToEndTest {
 						.content(mockAccountRequestWithInvalidCurrencyJson())
 						.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
+
 				.andExpectAll(
 						status().isBadRequest()
 				);
 	}
 
+
 	@Test
 	@DisplayName("GET /account/{id} - found")
 	void Given_ExistingAccountId_When_GetAccount_Then_Success() throws Exception {
+		// Given
 		AtomicLong accountId = new AtomicLong();
 
 		mockMvc.perform(post("/account")
@@ -72,17 +88,18 @@ public class MainApplicationEndToEndTest {
 						.content(mockAccountRequestDtoJson())
 						.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
+
 				.andExpect(status().isCreated())
 				.andDo((r) -> {
 					AccountResponseDto responseDto = HttpUtils.fromJson(
 							r.getResponse().getContentAsString(), AccountResponseDto.class);
 					accountId.set(responseDto.getId());
 				});
-
-
+		// When
 		mockMvc.perform(get("/account/{id}", accountId)
 						.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
+				// Then
 				.andExpectAll(
 						status().isFound(),
 						content().contentType(MediaType.APPLICATION_JSON),
@@ -90,6 +107,19 @@ public class MainApplicationEndToEndTest {
 						jsonPath("$.customer_id", is(CUSTOMER_ID), Long.class),
 						jsonPath("$.balances[*].currency", containsInAnyOrder(Currency.valuesAsStringArray())),
 						jsonPath("$.balances[*].amount", everyItem(is("0.00")))
+				);
+	}
+
+	@Test
+	@DisplayName("GET /account/{id} - not found on not existing")
+	void Given_NotExistingAccountId_When_GetAccount_Then_BadRequest() throws Exception {
+
+		mockMvc.perform(get("/account/{id}", getRandomLong())
+						.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
+
+				.andExpectAll(
+						status().isNotFound()
 				);
 	}
 }
