@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExceptionControllerTest {
@@ -24,8 +23,8 @@ class ExceptionControllerTest {
                 exceptionController.handleAccountNotFoundException(new AccountNotFoundException("Account Not Found"));
 
         assertAll(
-                () -> assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND)),
-                () -> assertThat(response.getBody().getMessage(), is("Account Not Found"))
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND),
+                () -> assertThat(response.getBody().getMessage()).isEqualTo("Account Not Found")
         );
     }
 
@@ -36,8 +35,8 @@ class ExceptionControllerTest {
                 exceptionController.handleUserException(new UserException());
 
         assertAll(
-                () -> assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST)),
-                () -> assertThat(response.getBody().getMessage(), is("Invalid input data"))
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST),
+                () -> assertThat(response.getBody().getMessage()).isEqualTo("Invalid input data")
         );
     }
 
@@ -48,8 +47,8 @@ class ExceptionControllerTest {
                 exceptionController.handleSystemException(new SystemException());
 
         assertAll(
-                () -> assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR)),
-                () -> assertThat(response.getBody().getMessage(), is("Internal server error"))
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR),
+                () -> assertThat(response.getBody().getMessage()).isEqualTo("Internal server error")
         );
     }
 }

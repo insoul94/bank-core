@@ -11,8 +11,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.bank.app.mocks.DataMock.*;
 
@@ -26,10 +25,10 @@ class BalanceMapperTest {
         Balance entity = BalanceMapper.toEntity(Currency.EUR, account);
 
         assertAll(
-                () -> assertThat(entity.getId(), nullValue()),
-                () -> assertThat(entity.getAccount(), is(account)),
-                () -> assertThat(entity.getCurrency(), is(Currency.EUR)),
-                () -> assertThat(entity.getAmount(), is(new BigDecimal("0.00"))));
+                () -> assertThat(entity.getId()).isNull(),
+                () -> assertThat(entity.getAccount()).isEqualTo(account),
+                () -> assertThat(entity.getCurrency()).isEqualTo(Currency.EUR),
+                () -> assertThat(entity.getAmount()).isEqualTo(new BigDecimal("0.00")));
     }
 
     @Test
@@ -40,10 +39,10 @@ class BalanceMapperTest {
         Balance entity = BalanceMapper.toEntity(null, account);
 
         assertAll(
-                () -> assertThat(entity.getId(), nullValue()),
-                () -> assertThat(entity.getAccount(), nullValue()),
-                () -> assertThat(entity.getCurrency(), nullValue()),
-                () -> assertThat(entity.getAmount(), nullValue()));
+                () -> assertThat(entity.getId()).isNull(),
+                () -> assertThat(entity.getAccount()).isNull(),
+                () -> assertThat(entity.getCurrency()).isNull(),
+                () -> assertThat(entity.getAmount()).isNull());
     }
 
     @Test
@@ -52,10 +51,10 @@ class BalanceMapperTest {
         Balance entity = BalanceMapper.toEntity(Currency.EUR, null);
 
         assertAll(
-                () -> assertThat(entity.getId(), nullValue()),
-                () -> assertThat(entity.getAccount(), nullValue()),
-                () -> assertThat(entity.getCurrency(), nullValue()),
-                () -> assertThat(entity.getAmount(), nullValue()));
+                () -> assertThat(entity.getId()).isNull(),
+                () -> assertThat(entity.getAccount()).isNull(),
+                () -> assertThat(entity.getCurrency()).isNull(),
+                () -> assertThat(entity.getAmount()).isNull());
     }
 
 
@@ -67,14 +66,18 @@ class BalanceMapperTest {
         Set<Balance> entitySet = BalanceMapper.toEntitySet(Currency.valuesAsSet(), account);
 
         assertAll(
-                () -> assertThat(entitySet.stream().map(Balance::getId).toList(),
-                        everyItem(nullValue())),
-                () -> assertThat(entitySet.stream().map(Balance::getAccount).toList(),
-                        everyItem(is(account))),
-                () -> assertThat(entitySet.stream().map(Balance::getCurrency).toList(),
-                        containsInAnyOrder(Currency.values())),
-                () -> assertThat(entitySet.stream().map(Balance::getAmount).toList(),
-                        everyItem(is(new BigDecimal("0.00")))));
+                () -> assertThat(entitySet.stream().map(Balance::getCurrency).toList()).containsOnly(Currency.values()),
+                () -> assertThat(entitySet).allSatisfy(entity -> {
+                    assertThat(entity.getId()).isNull();
+                    assertThat(entity.getAccount()).isEqualTo(account);
+                    assertThat(entity.getAmount()).isEqualTo(new BigDecimal("0.00"));
+                })
+        );
+        assertThat(entitySet).allSatisfy(entity -> {
+            assertThat(entity.getId()).isNull();
+            assertThat(entity.getAccount()).isEqualTo(account);
+            assertThat(entity.getAmount()).isEqualTo(new BigDecimal("0.00"));
+        });
     }
 
     @Test
@@ -84,7 +87,7 @@ class BalanceMapperTest {
 
         Set<Balance> entitySet = BalanceMapper.toEntitySet(new HashSet<>(), account);
 
-        assertThat(entitySet.size(), is(0));
+        assertThat(entitySet.size()).isEqualTo(0);
     }
 
     @Test
@@ -92,7 +95,7 @@ class BalanceMapperTest {
     void Given_CurrencySetAndNull_When_ToEntitySet_Then_ReturnEmptySet() {
         Set<Balance> entitySet = BalanceMapper.toEntitySet(Currency.valuesAsSet(), null);
 
-        assertThat(entitySet.size(), is(0));
+        assertThat(entitySet.size()).isEqualTo(0);
     }
 
     @Test
@@ -103,8 +106,8 @@ class BalanceMapperTest {
         BalanceDto dto = BalanceMapper.toDto(entity);
 
         assertAll(
-                () -> assertThat(dto.getAmount(), is(AMOUNT)),
-                () -> assertThat(dto.getCurrency(), is(CURRENCY)));
+                () -> assertThat(dto.getAmount()).isEqualTo(AMOUNT),
+                () -> assertThat(dto.getCurrency()).isEqualTo(CURRENCY));
     }
 
     @Test
@@ -113,8 +116,8 @@ class BalanceMapperTest {
         BalanceDto dto = BalanceMapper.toDto(null);
 
         assertAll(
-                () -> assertThat(dto.getAmount(), nullValue()),
-                () -> assertThat(dto.getCurrency(), nullValue()));
+                () -> assertThat(dto.getAmount()).isNull(),
+                () -> assertThat(dto.getCurrency()).isNull());
     }
 
     @Test
@@ -125,10 +128,8 @@ class BalanceMapperTest {
         Set<BalanceDto> dtoSet = BalanceMapper.toDtoSet(balanceSet);
 
         assertAll(
-                () -> assertThat(dtoSet.stream().map(BalanceDto::getCurrency).toList(),
-                        containsInAnyOrder(Currency.values())),
-                () -> assertThat(dtoSet.stream().map(BalanceDto::getAmount).toList(),
-                        everyItem(is("0.00"))));
+                () -> assertThat(dtoSet.stream().map(BalanceDto::getCurrency).toList()).containsOnly(Currency.values()),
+                () -> assertThat(dtoSet).allMatch(dto -> dto.getAmount().equals("0.00")));
     }
 
     @Test
@@ -136,6 +137,6 @@ class BalanceMapperTest {
     void Given_EmptySet_When_ToDtoSet_Then_ReturnEmptySet() {
         Set<BalanceDto> dtoSet = BalanceMapper.toDtoSet(new HashSet<>());
 
-        assertThat(dtoSet.size(), is(0));
+        assertThat(dtoSet.size()).isEqualTo(0);
     }
 }

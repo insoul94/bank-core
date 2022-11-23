@@ -15,13 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.bank.app.mocks.DataMock.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
@@ -43,14 +41,12 @@ class AccountServiceTest {
         AccountResponseDto responseDto = accountService.createAccount(requestDto);
         // Then
         assertAll(
-                () -> assertThat(responseDto.getId(), greaterThan(0L)),
-                () -> assertThat(responseDto.getCustomerId(), is(requestDto.getCustomerId())),
-                () -> assertThat(responseDto.getBalanceDtoSet().stream().map(BalanceDto::getCurrency).toList(),
-                        containsInAnyOrder(Currency.values())),
-                () -> assertThat(responseDto.getBalanceDtoSet().stream().map(BalanceDto::getAmount).toList(),
-                        everyItem(is("0.00")))
+                () -> assertThat(responseDto.getId()).isGreaterThan(0L),
+                () -> assertThat(responseDto.getCustomerId()).isEqualTo(requestDto.getCustomerId()),
+                () -> assertThat(responseDto.getBalanceDtoSet().stream().map(BalanceDto::getCurrency).toList())
+                        .containsOnly(Currency.values()),
+                () -> assertThat(responseDto.getBalanceDtoSet()).allMatch(dto -> dto.getAmount().equals("0.00"))
         );
-        verify(accountRepository).save(any(Account.class));
     }
 
     @Test
@@ -63,13 +59,11 @@ class AccountServiceTest {
         AccountResponseDto responseDto = accountService.readAccount(ACCOUNT_ID);
         // Then
         assertAll(
-                () -> assertThat(responseDto.getId(), greaterThan(0L)),
-                () -> assertThat(responseDto.getCustomerId(), is(account.getCustomerId())),
-                () -> assertThat(responseDto.getBalanceDtoSet().stream().map(BalanceDto::getCurrency).toList(),
-                        containsInAnyOrder(Currency.values())),
-                () -> assertThat(responseDto.getBalanceDtoSet().stream().map(BalanceDto::getAmount).toList(),
-                        everyItem(is("0.00")))
+                () -> assertThat(responseDto.getId()).isEqualTo(ACCOUNT_ID),
+                () -> assertThat(responseDto.getCustomerId()).isEqualTo(account.getCustomerId()),
+                () -> assertThat(responseDto.getBalanceDtoSet().stream().map(BalanceDto::getCurrency).toList())
+                        .containsOnly(Currency.values()),
+                () -> assertThat(responseDto.getBalanceDtoSet()).allMatch(dto -> dto.getAmount().equals("0.00"))
         );
-        verify(accountRepository).findById(ACCOUNT_ID);
     }
 }

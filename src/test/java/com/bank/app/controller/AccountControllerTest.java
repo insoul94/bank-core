@@ -5,7 +5,6 @@ import com.bank.app.dto.AccountResponseDto;
 import com.bank.app.dto.TransactionRequestDto;
 import com.bank.app.dto.TransactionResponseDto;
 import com.bank.app.exception.*;
-import com.bank.app.mocks.DataMock;
 import com.bank.app.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,9 +17,10 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+import static com.bank.app.mocks.DataMock.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccountControllerTest {
@@ -41,27 +41,33 @@ class AccountControllerTest {
     @Test
     @DisplayName("createAccount - success")
     void Given_AccountDto_When_CreateAccount_Then_ReturnAccount() {
-        AccountRequestDto request = DataMock.mockAccountRequestDto();
-        AccountResponseDto response = DataMock.mockAccountResponseDto();
+        AccountRequestDto request = mockAccountRequestDto();
+        AccountResponseDto response = mockAccountResponseDto();
         when(accountService.createAccount(request)).thenReturn(response);
-        when(bindingResult.hasErrors()).thenReturn(false);
 
         AccountResponseDto actual = accountController.createAccount(request, bindingResult).getBody();
 
-        assertThat(actual, is(response));
-        verify(accountService).createAccount(request);
+        assertThat(actual).isEqualTo(response);
+    }
+
+    @Test
+    @DisplayName("createAccount - InvalidCurrencyException on invalid currency")
+    void Given_InvalidCurrency_When_CreateAccount_Then_ThrowInvalidCurrencyException() {
+        AccountRequestDto request = mockAccountRequestDto();
+        when(bindingResult.hasFieldErrors("currency")).thenReturn(true);
+
+        assertThrows(InvalidCurrencyException.class, () -> accountController.createAccount(request, bindingResult));
     }
 
     @Test
     @DisplayName("readAccount - success")
     void Given_AccountId_When_ReadAccount_Then_ReturnAccount() {
-        AccountResponseDto response = DataMock.mockAccountResponseDto();
-        when(accountService.readAccount(DataMock.ACCOUNT_ID)).thenReturn(response);
+        AccountResponseDto response = mockAccountResponseDto();
+        when(accountService.readAccount(ACCOUNT_ID)).thenReturn(response);
 
-        AccountResponseDto actual = accountController.readAccount(DataMock.ACCOUNT_ID).getBody();
+        AccountResponseDto actual = accountController.readAccount(ACCOUNT_ID).getBody();
 
-        assertThat(actual, is(response));
-        verify(accountService).readAccount(DataMock.ACCOUNT_ID);
+        assertThat(actual).isEqualTo(response);
     }
 
     @Test
@@ -70,25 +76,23 @@ class AccountControllerTest {
             // TODO: group exceptions
             throws AccountMissingException, InvalidAmountException, InsufficientFundsException, InvalidDirectionException, DescriptionMissingException, InvalidCurrencyException {
 
-                TransactionRequestDto request = DataMock.mockTransactionRequestDto();
-                TransactionResponseDto response = DataMock.mockTransactionResponseDto();
+                TransactionRequestDto request = mockTransactionRequestDto();
+                TransactionResponseDto response = mockTransactionResponseDto();
                 when(accountService.createTransaction(request)).thenReturn(response);
 
                 TransactionResponseDto actual = accountController.createTransaction(request).getBody();
 
-                assertThat(actual, is(response));
-                verify(accountService).createTransaction(request);
+                assertThat(actual).isEqualTo(response);
             }
 
     @Test
     @DisplayName("readTransaction - success")
     void Given_AccountId_When_ReadTransaction_Then_ReturnTransactionList() throws AccountMissingException {
-        List<TransactionResponseDto> response = DataMock.mockTransactionResponseDtoList();
-        when(accountService.readTransactions(DataMock.ACCOUNT_ID)).thenReturn(response);
+        List<TransactionResponseDto> response = mockTransactionResponseDtoList();
+        when(accountService.readTransactions(ACCOUNT_ID)).thenReturn(response);
 
-        List<TransactionResponseDto> actual = accountController.readTransactions(DataMock.ACCOUNT_ID).getBody();
+        List<TransactionResponseDto> actual = accountController.readTransactions(ACCOUNT_ID).getBody();
 
-        assertThat(actual, is(response));
-        verify(accountService).readTransactions(DataMock.ACCOUNT_ID);
+        assertThat(actual).isEqualTo(response);
     }
 }

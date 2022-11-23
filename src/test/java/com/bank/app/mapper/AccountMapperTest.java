@@ -16,8 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static com.bank.app.mocks.DataMock.*;
 
@@ -30,15 +29,15 @@ class AccountMapperTest {
 
         Account entity = AccountMapper.toEntity(requestDto);
 
-        List<Account> entityBalancesAccountList = entity.getBalances().stream().map(Balance::getAccount).toList();
-        List<Currency> entityCurrencyList = entity.getBalances().stream().map(Balance::getCurrency).toList();
-        List<BigDecimal> entityAmountList = entity.getBalances().stream().map(Balance::getAmount).toList();
+        List<Currency> entityCurrencyArray = entity.getBalances().stream().map(Balance::getCurrency).toList();
         assertAll(
-                () -> assertThat(entity.getCustomerId(), is(requestDto.getCustomerId())),
-                () -> assertThat(entity.getCountry(), is(requestDto.getCountry())),
-                () -> assertThat(entityBalancesAccountList, everyItem(is(entity))),
-                () -> assertThat(entityCurrencyList, containsInAnyOrder(requestDto.getCurrencies().toArray())),
-                () -> assertThat(entityAmountList, everyItem(is(new BigDecimal("0.00")))));
+                () -> assertThat(entity.getCustomerId()).isEqualTo(requestDto.getCustomerId()),
+                () -> assertThat(entity.getCountry()).isEqualTo(requestDto.getCountry()),
+                () -> assertThat(entityCurrencyArray).containsExactlyInAnyOrderElementsOf(requestDto.getCurrencies()),
+                () -> assertThat(entity.getBalances()).allSatisfy(balance -> {
+                    assertThat(balance.getAccount()).isEqualTo(entity);
+                    assertThat(balance.getAmount()).isEqualTo(new BigDecimal("0.00"));
+                }));
     }
 
     @Test
@@ -47,10 +46,10 @@ class AccountMapperTest {
         Account entity = AccountMapper.toEntity(null);
 
         assertAll(
-                () -> assertThat(entity.getId(), nullValue()),
-                () -> assertThat(entity.getCustomerId(), nullValue()),
-                () -> assertThat(entity.getCountry(), nullValue()),
-                () -> assertThat(entity.getBalances(), nullValue()));
+                () -> assertThat(entity.getId()).isNull(),
+                () -> assertThat(entity.getCustomerId()).isNull(),
+                () -> assertThat(entity.getCountry()).isNull(),
+                () -> assertThat(entity.getBalances()).isNull());
     }
 
     @Test
@@ -71,9 +70,9 @@ class AccountMapperTest {
                         .collect(Collectors.toMap(Balance::getCurrency, bal -> bal.getAmount().toString()))
                         .entrySet();
         assertAll(
-                () -> assertThat(responseDto.getId(), is(account.getId())),
-                () -> assertThat(responseDto.getCustomerId(), is(account.getCustomerId())),
-                () -> assertThat(responseDtoBalanceSet, containsInAnyOrder(entityBalanceSet.toArray())));
+                () -> assertThat(responseDto.getId()).isEqualTo(account.getId()),
+                () -> assertThat(responseDto.getCustomerId()).isEqualTo(account.getCustomerId()),
+                () -> assertThat(responseDtoBalanceSet).containsExactlyInAnyOrderElementsOf(entityBalanceSet));
     }
 
     @Test
@@ -82,8 +81,8 @@ class AccountMapperTest {
         AccountResponseDto responseDto = AccountMapper.toResponseDto(null);
 
         assertAll(
-                () -> assertThat(responseDto.getId(), nullValue()),
-                () -> assertThat(responseDto.getCustomerId(), nullValue()),
-                () -> assertThat(responseDto.getBalanceDtoSet(), nullValue()));
+                () -> assertThat(responseDto.getId()).isNull(),
+                () -> assertThat(responseDto.getCustomerId()).isNull(),
+                () -> assertThat(responseDto.getBalanceDtoSet()).isNull());
     }
 }
