@@ -1,4 +1,4 @@
-package com.bank.app.mocks;
+package com.bank.app.util;
 
 import com.bank.app.dto.*;
 import com.bank.app.entity.Balance;

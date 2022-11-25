@@ -11,14 +11,14 @@ import org.junit.jupiter.api.Test;
 
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static com.bank.app.util.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static com.bank.app.mocks.DataMock.*;
+import static com.bank.app.util.DataMock.*;
 
 class AccountMapperTest {
 
@@ -29,11 +29,11 @@ class AccountMapperTest {
 
         Account entity = AccountMapper.toEntity(requestDto);
 
-        List<Currency> entityCurrencyArray = entity.getBalances().stream().map(Balance::getCurrency).toList();
         assertAll(
                 () -> assertThat(entity.getCustomerId()).isEqualTo(requestDto.getCustomerId()),
                 () -> assertThat(entity.getCountry()).isEqualTo(requestDto.getCountry()),
-                () -> assertThat(entityCurrencyArray).containsExactlyInAnyOrderElementsOf(requestDto.getCurrencies()),
+                () -> assertThat(getCurrencyArray(entity))
+                        .containsExactlyInAnyOrderElementsOf(requestDto.getCurrencies()),
                 () -> assertThat(entity.getBalances()).allSatisfy(balance -> {
                     assertThat(balance.getAccount()).isEqualTo(entity);
                     assertThat(balance.getAmount()).isEqualTo(new BigDecimal("0.00"));
@@ -55,10 +55,11 @@ class AccountMapperTest {
     @Test
     @DisplayName("toResponseDto() - success")
     void Given_Account_When_ToResponseDto_Then_ReturnAccountResponseDto() {
+        // Given
         Account account = mockAccount();
-
+        // WHen
         AccountResponseDto responseDto = AccountMapper.toResponseDto(account);
-
+        // Then
         Set<Map.Entry<Currency, String>> responseDtoBalanceSet =
                 responseDto.getBalanceDtoSet()
                         .stream()

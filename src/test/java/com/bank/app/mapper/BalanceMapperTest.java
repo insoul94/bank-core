@@ -12,8 +12,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static com.bank.app.mocks.DataMock.*;
+import static com.bank.app.util.DataMock.*;
 
 class BalanceMapperTest {
 
@@ -66,18 +67,14 @@ class BalanceMapperTest {
         Set<Balance> entitySet = BalanceMapper.toEntitySet(Currency.valuesAsSet(), account);
 
         assertAll(
-                () -> assertThat(entitySet.stream().map(Balance::getCurrency).toList()).containsOnly(Currency.values()),
+                () -> assertThat(entitySet.stream().map(Balance::getCurrency).toList())
+                        .containsExactlyInAnyOrder(Currency.values()),
                 () -> assertThat(entitySet).allSatisfy(entity -> {
                     assertThat(entity.getId()).isNull();
                     assertThat(entity.getAccount()).isEqualTo(account);
                     assertThat(entity.getAmount()).isEqualTo(new BigDecimal("0.00"));
                 })
         );
-        assertThat(entitySet).allSatisfy(entity -> {
-            assertThat(entity.getId()).isNull();
-            assertThat(entity.getAccount()).isEqualTo(account);
-            assertThat(entity.getAmount()).isEqualTo(new BigDecimal("0.00"));
-        });
     }
 
     @Test
@@ -128,7 +125,8 @@ class BalanceMapperTest {
         Set<BalanceDto> dtoSet = BalanceMapper.toDtoSet(balanceSet);
 
         assertAll(
-                () -> assertThat(dtoSet.stream().map(BalanceDto::getCurrency).toList()).containsOnly(Currency.values()),
+                () -> assertThat(dtoSet.stream().map(BalanceDto::getCurrency).toList())
+                        .containsExactlyInAnyOrder(Currency.values()),
                 () -> assertThat(dtoSet).allMatch(dto -> dto.getAmount().equals("0.00")));
     }
 

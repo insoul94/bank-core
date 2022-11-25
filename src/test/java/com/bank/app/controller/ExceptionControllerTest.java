@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.bank.app.mocks.DataMock.*;
+import static com.bank.app.util.DataMock.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

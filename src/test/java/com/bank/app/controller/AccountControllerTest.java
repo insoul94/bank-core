@@ -6,7 +6,6 @@ import com.bank.app.dto.TransactionRequestDto;
 import com.bank.app.dto.TransactionResponseDto;
 import com.bank.app.exception.*;
 import com.bank.app.service.AccountService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static com.bank.app.mocks.DataMock.*;
+import static com.bank.app.util.DataMock.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccountControllerTest {

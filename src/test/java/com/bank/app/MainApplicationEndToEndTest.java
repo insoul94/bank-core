@@ -2,9 +2,7 @@ package com.bank.app;
 
 import com.bank.app.constant.Currency;
 import com.bank.app.dto.AccountResponseDto;
-import com.bank.app.repository.AccountRepository;
 import com.bank.app.util.HttpUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +10,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.bank.app.mocks.DataMock.*;
+import static com.bank.app.util.DataMock.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,19 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class MainApplicationEndToEndTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
-    @Autowired
-    private AccountRepository accountRepository;
-
-
-    @AfterEach
-    void cleanUp() {
-        accountRepository.deleteAll();
-    }
 
 	@Test
 	@DisplayName("POST /account - created")
