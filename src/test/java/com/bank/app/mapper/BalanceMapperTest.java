@@ -103,7 +103,7 @@ class BalanceMapperTest {
         BalanceDto dto = BalanceMapper.toDto(entity);
 
         assertAll(
-                () -> assertThat(dto.getAmount()).isEqualTo(AMOUNT),
+                () -> assertThat(dto.getAmount()).isEqualTo(AMOUNT.toString()),
                 () -> assertThat(dto.getCurrency()).isEqualTo(CURRENCY));
     }
 

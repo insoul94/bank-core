@@ -2,6 +2,7 @@ package com.bank.app.util;
 
 import com.bank.app.dto.*;
 import com.bank.app.entity.Balance;
+import com.bank.app.entity.Transaction;
 import com.bank.app.mapper.BalanceMapper;
 import com.bank.app.constant.Currency;
 import com.bank.app.constant.Direction;
@@ -9,7 +10,6 @@ import com.bank.app.entity.Account;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.bank.app.util.HttpUtils.*;
@@ -17,12 +17,11 @@ import static com.bank.app.util.HttpUtils.*;
 public class DataMock {
 
     public final static long ACCOUNT_ID = getRandomLong();
-    // Test only positive numbers
     public final static long CUSTOMER_ID = getRandomLong();
     public final static long TRANSACTION_ID = getRandomLong();
-    public final static String AMOUNT = String.valueOf(getRandomAmount());
+    public final static BigDecimal AMOUNT = getRandomAmount();
     public final static String COUNTRY = getRandomCountry();
-    public final static String DESCRIPTION = getRandomString(100);
+    public final static String DESCRIPTION = "Test Description";
     public final static Currency CURRENCY = getRandomCurrency();
 
     private DataMock() {
@@ -34,12 +33,6 @@ public class DataMock {
     }
     public static long getRandomLong() {
         return new Random().nextLong(Long.SIZE - 1);
-    }
-
-    public static String getRandomString(int size) {
-        byte[] array = new byte[size];
-        new Random().nextBytes(array);
-        return new String(array, StandardCharsets.UTF_8);
     }
 
     public static String getRandomCountry() {
@@ -55,7 +48,7 @@ public class DataMock {
         return Balance.builder()
                 .account(mockAccount())
                 .currency(CURRENCY)
-                .amount(new BigDecimal(AMOUNT))
+                .amount(AMOUNT)
                 .build();
     }
     public static Set<Balance> mockBalanceSet() {
@@ -103,8 +96,19 @@ public class DataMock {
     public static TransactionRequestDto mockTransactionRequestDto() {
         return TransactionRequestDto.builder()
                 .accountId(ACCOUNT_ID)
-                .amount(AMOUNT)
+                .amount(AMOUNT.toString())
                 .currency(CURRENCY)
+                .direction(Direction.IN)
+                .description(DESCRIPTION)
+                .build();
+    }
+
+    public static Transaction mockTransaction() {
+        return Transaction.builder()
+                .id(TRANSACTION_ID)
+                .account(mockAccount())
+                .amount(AMOUNT)
+                .currency(Currency.EUR)
                 .direction(Direction.IN)
                 .description(DESCRIPTION)
                 .build();
@@ -113,11 +117,11 @@ public class DataMock {
     public static TransactionResponseDto mockTransactionResponseDto() {
         return TransactionResponseDto.builder()
                 .accountId(ACCOUNT_ID)
-                .amount(AMOUNT)
+                .amount(AMOUNT.toString())
                 .currency(CURRENCY)
                 .direction(Direction.IN)
                 .description(DESCRIPTION)
-                .balanceAfter(AMOUNT)
+                .balanceAfter(AMOUNT.toString())
                 .build();
     }
 

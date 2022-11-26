@@ -25,10 +25,11 @@ class AccountMapperTest {
     @Test
     @DisplayName("toEntity() - success")
     void Given_AccountResponseDto_When_ToEntity_Then_ReturnAccount() {
+        // Given
         AccountRequestDto requestDto = mockAccountRequestDto();
-
+        // When
         Account entity = AccountMapper.toEntity(requestDto);
-
+        // Then
         assertAll(
                 () -> assertThat(entity.getCustomerId()).isEqualTo(requestDto.getCustomerId()),
                 () -> assertThat(entity.getCountry()).isEqualTo(requestDto.getCountry()),
@@ -43,8 +44,9 @@ class AccountMapperTest {
     @Test
     @DisplayName("toEntity() - return empty Account on null")
     void Given_Null_When_ToEntity_Then_ReturnEmptyAccount() {
+        // Given, When
         Account entity = AccountMapper.toEntity(null);
-
+        // Then
         assertAll(
                 () -> assertThat(entity.getId()).isNull(),
                 () -> assertThat(entity.getCustomerId()).isNull(),
@@ -79,8 +81,9 @@ class AccountMapperTest {
     @Test
     @DisplayName("toResponseDto() - return empty AccountResponseDto on null")
     void Given_Null_When_ToResponseDto_Then_ReturnEmptyAccountResponseDto() {
+        // Given, When
         AccountResponseDto responseDto = AccountMapper.toResponseDto(null);
-
+        // Then
         assertAll(
                 () -> assertThat(responseDto.getId()).isNull(),
                 () -> assertThat(responseDto.getCustomerId()).isNull(),
