@@ -21,10 +21,11 @@ class BalanceMapperTest {
     @Test
     @DisplayName("toEntity() - success")
     void Given_CurrencyAndAccount_When_ToEntity_Then_ReturnBalance() {
+        // Given
         Account account = mockAccount();
-
+        // When
         Balance entity = BalanceMapper.toEntity(Currency.EUR, account);
-
+        // Then
         assertAll(
                 () -> assertThat(entity.getId()).isNull(),
                 () -> assertThat(entity.getAccount()).isEqualTo(account),
@@ -35,10 +36,11 @@ class BalanceMapperTest {
     @Test
     @DisplayName("toEntity() - return empty Balance on null Currency")
     void Given_NullAndAccount_When_ToEntity_Then_ReturnEmptyBalance() {
+        // Given
         Account account = mockAccount();
-
+        // When
         Balance entity = BalanceMapper.toEntity(null, account);
-
+        // Then
         assertAll(
                 () -> assertThat(entity.getId()).isNull(),
                 () -> assertThat(entity.getAccount()).isNull(),
@@ -49,8 +51,9 @@ class BalanceMapperTest {
     @Test
     @DisplayName("toEntity() - return empty Balance on null Account")
     void Given_CurrencyAndNull_When_ToEntity_Then_ReturnEmptyBalance() {
+        // Given, When
         Balance entity = BalanceMapper.toEntity(Currency.EUR, null);
-
+        // Then
         assertAll(
                 () -> assertThat(entity.getId()).isNull(),
                 () -> assertThat(entity.getAccount()).isNull(),
@@ -62,10 +65,11 @@ class BalanceMapperTest {
     @Test
     @DisplayName("toEntitySet() - success")
     void Given_CurrencySetAndAccount_When_ToEntitySet_Then_ReturnBalanceSet() {
+        // Given
         Account account = mockAccount();
-
+        // When
         Set<Balance> entitySet = BalanceMapper.toEntitySet(Currency.valuesAsSet(), account);
-
+        // Then
         assertAll(
                 () -> assertThat(entitySet.stream().map(Balance::getCurrency).toList())
                         .containsExactlyInAnyOrder(Currency.values()),
@@ -80,28 +84,31 @@ class BalanceMapperTest {
     @Test
     @DisplayName("toEntitySet() - return empty HashSet on empty set")
     void Given_EmptyCurrencySet_When_ToEntitySet_Then_ReturnEmptySet() {
+        // Given
         Account account = mockAccount();
-
+        // When
         Set<Balance> entitySet = BalanceMapper.toEntitySet(new HashSet<>(), account);
-
+        // Then
         assertThat(entitySet.size()).isEqualTo(0);
     }
 
     @Test
     @DisplayName("toEntitySet() - return empty Balance on null Account")
     void Given_CurrencySetAndNull_When_ToEntitySet_Then_ReturnEmptySet() {
+        // Given, When
         Set<Balance> entitySet = BalanceMapper.toEntitySet(Currency.valuesAsSet(), null);
-
+        // Then
         assertThat(entitySet.size()).isEqualTo(0);
     }
 
     @Test
     @DisplayName("toDto() - success")
     void Given_Balance_When_ToDto_Then_ReturnBalanceDto() {
+        // Given
         Balance entity = mockBalance();
-
+        // When
         BalanceDto dto = BalanceMapper.toDto(entity);
-
+        // Then
         assertAll(
                 () -> assertThat(dto.getAmount()).isEqualTo(AMOUNT.toString()),
                 () -> assertThat(dto.getCurrency()).isEqualTo(CURRENCY));
@@ -110,8 +117,9 @@ class BalanceMapperTest {
     @Test
     @DisplayName("toDto() - return empty BalanceDto on null")
     void Given_Null_When_ToDto_Then_ReturnEmptyBalanceDto() {
+        // Given, When
         BalanceDto dto = BalanceMapper.toDto(null);
-
+        // Then
         assertAll(
                 () -> assertThat(dto.getAmount()).isNull(),
                 () -> assertThat(dto.getCurrency()).isNull());
@@ -120,10 +128,11 @@ class BalanceMapperTest {
     @Test
     @DisplayName("toDtoSet() - success")
     void Given_BalanceSet_When_ToDtoSet_Then_ReturnBalanceDtoSet() {
+        // Given
         Set<Balance> balanceSet = mockBalanceSet();
-
+        // When
         Set<BalanceDto> dtoSet = BalanceMapper.toDtoSet(balanceSet);
-
+        // Then
         assertAll(
                 () -> assertThat(dtoSet.stream().map(BalanceDto::getCurrency).toList())
                         .containsExactlyInAnyOrder(Currency.values()),
@@ -133,8 +142,9 @@ class BalanceMapperTest {
     @Test
     @DisplayName("toDtoSet() - return empty HashSet on empty set")
     void Given_EmptySet_When_ToDtoSet_Then_ReturnEmptySet() {
+        // Given, When
         Set<BalanceDto> dtoSet = BalanceMapper.toDtoSet(new HashSet<>());
-
+        // Then
         assertThat(dtoSet.size()).isEqualTo(0);
     }
 }

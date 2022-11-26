@@ -32,7 +32,5 @@ public class TransactionResponseDto {
 
     private String description;
 
-    @NotNull
     private String balanceAfter;
-
 }

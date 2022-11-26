@@ -50,7 +50,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(status)
                 .body(ExceptionDto.builder()
-                        .message(ex.getMessage())
+                        .message(ex instanceof SystemException ? SystemException.DEFAULT_MESSAGE : ex.getMessage())
                         .build());
     }
 }
