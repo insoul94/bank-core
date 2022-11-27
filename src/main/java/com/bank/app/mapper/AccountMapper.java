@@ -5,6 +5,7 @@ import com.bank.app.dto.AccountResponseDto;
 import com.bank.app.entity.Account;
 import com.bank.app.entity.Balance;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 public class AccountMapper {
@@ -13,10 +14,7 @@ public class AccountMapper {
      * @param requestDto
      * @return Account with null 'id' field.
      */
-    public static Account toEntity(AccountRequestDto requestDto) {
-        if (requestDto == null) {
-            return Account.builder().build();
-        }
+    public static Account toEntity(@NotNull AccountRequestDto requestDto) {
         Account account = Account.builder()
                 .customerId(requestDto.getCustomerId())
                 .country(requestDto.getCountry())
@@ -26,11 +24,7 @@ public class AccountMapper {
         return account;
     }
 
-    public static AccountResponseDto toResponseDto(Account entity) {
-        // TODO Where to handle null? Or return empty object?
-        if (entity == null) {
-            return AccountResponseDto.builder().build();
-        }
+    public static AccountResponseDto toResponseDto(@NotNull Account entity) {
         return AccountResponseDto.builder()
                 .id(entity.getId())
                 .customerId(entity.getCustomerId())

@@ -42,19 +42,6 @@ class AccountMapperTest {
     }
 
     @Test
-    @DisplayName("toEntity() - return empty Account on null")
-    void Given_Null_When_ToEntity_Then_ReturnEmptyAccount() {
-        // Given, When
-        Account entity = AccountMapper.toEntity(null);
-        // Then
-        assertAll(
-                () -> assertThat(entity.getId()).isNull(),
-                () -> assertThat(entity.getCustomerId()).isNull(),
-                () -> assertThat(entity.getCountry()).isNull(),
-                () -> assertThat(entity.getBalances()).isNull());
-    }
-
-    @Test
     @DisplayName("toResponseDto() - success")
     void Given_Account_When_ToResponseDto_Then_ReturnAccountResponseDto() {
         // Given
@@ -76,17 +63,5 @@ class AccountMapperTest {
                 () -> assertThat(responseDto.getId()).isEqualTo(account.getId()),
                 () -> assertThat(responseDto.getCustomerId()).isEqualTo(account.getCustomerId()),
                 () -> assertThat(responseDtoBalanceSet).containsExactlyInAnyOrderElementsOf(entityBalanceSet));
-    }
-
-    @Test
-    @DisplayName("toResponseDto() - return empty AccountResponseDto on null")
-    void Given_Null_When_ToResponseDto_Then_ReturnEmptyAccountResponseDto() {
-        // Given, When
-        AccountResponseDto responseDto = AccountMapper.toResponseDto(null);
-        // Then
-        assertAll(
-                () -> assertThat(responseDto.getId()).isNull(),
-                () -> assertThat(responseDto.getCustomerId()).isNull(),
-                () -> assertThat(responseDto.getBalanceDtoSet()).isNull());
     }
 }

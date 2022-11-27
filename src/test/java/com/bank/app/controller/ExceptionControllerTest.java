@@ -2,7 +2,6 @@ package com.bank.app.controller;
 
 import com.bank.app.dto.AccountRequestDto;
 import com.bank.app.exception.AccountNotFoundException;
-import com.bank.app.exception.SystemException;
 import com.bank.app.exception.UserException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,13 +12,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static com.bank.app.util.DataMock.*;
+import static com.bank.app.util.DataMock.ACCOUNT_ID;
+import static com.bank.app.util.DataMock.mockAccountRequestDtoJson;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 class ExceptionControllerTest {
@@ -66,11 +66,11 @@ class ExceptionControllerTest {
     }
 
     @Test
-    @DisplayName("handleSystemException() - success")
-    void Given_SystemException_When_PostAccount_Then_ReturnInternalServerError() throws Exception {
+    @DisplayName("handleAllExceptions() - success")
+    void Given_AnyException_When_PostAccount_Then_ReturnInternalServerError() throws Exception {
         // Given
         when(accountController.createAccount(any(AccountRequestDto.class), any(BindingResult.class)))
-                .thenThrow(SystemException.class);
+                .thenThrow(IllegalArgumentException.class);
         // When
         mockMvc.perform(post("/account")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +79,7 @@ class ExceptionControllerTest {
                 // Then
                 .andExpectAll(
                         status().isInternalServerError(),
-                        result -> assertTrue(result.getResolvedException() instanceof SystemException)
+                        result -> assertTrue(result.getResolvedException() instanceof IllegalArgumentException)
                 );
     }
 }

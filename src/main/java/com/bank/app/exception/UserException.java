@@ -1,6 +1,6 @@
 package com.bank.app.exception;
 
-public class UserException extends AppException{
+public class UserException extends RuntimeException {
     public UserException() {
         this("Invalid input data");
     }

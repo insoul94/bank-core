@@ -32,7 +32,7 @@ public class MainApplicationEndToEndTest {
 
 
 	@Test
-	@DisplayName("POST /account - created")
+	@DisplayName("POST /account - CREATED")
 	void Given_CorrectInput_When_PostAccount_Then_Success() throws Exception {
 
 		mockMvc.perform(post("/account")
@@ -54,7 +54,7 @@ public class MainApplicationEndToEndTest {
 
 
 	@Test
-	@DisplayName("POST /account - bad request on invalid currency")
+	@DisplayName("POST /account - BAD_REQUEST on invalid currency")
 	void Given_InvalidCurrency_When_PostAccount_Then_BadRequest() throws Exception {
 
 		mockMvc.perform(post("/account")
@@ -70,7 +70,7 @@ public class MainApplicationEndToEndTest {
 
 
 	@Test
-	@DisplayName("GET /account/{id} - found")
+	@DisplayName("GET /account/{id} - FOUND")
 	void Given_ExistingAccountId_When_GetAccount_Then_Success() throws Exception {
 		// Given
 		AtomicLong accountId = new AtomicLong();
@@ -104,7 +104,7 @@ public class MainApplicationEndToEndTest {
 	}
 
 	@Test
-	@DisplayName("GET /account/{id} - not found on not existing")
+	@DisplayName("GET /account/{id} - NOT_FOUND on not existing")
 	void Given_NotExistingAccountId_When_GetAccount_Then_BadRequest() throws Exception {
 
 		mockMvc.perform(get("/account/{id}", getRandomLong())

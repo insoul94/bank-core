@@ -4,7 +4,6 @@ import com.bank.app.dto.TransactionRequestDto;
 import com.bank.app.dto.TransactionResponseDto;
 import com.bank.app.entity.Account;
 import com.bank.app.entity.Transaction;
-import com.bank.app.exception.SystemException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,9 +11,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static com.bank.app.util.DataMock.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class TransactionMapperTest {
 
@@ -37,20 +36,6 @@ class TransactionMapperTest {
     }
 
     @Test
-    @DisplayName("toEntity() - SystemException on null requestDto")
-    void Given_NullAndAccount_When_ToEntity_Then_ThrowSystemException() {
-        assertThrows(SystemException.class,
-                () -> TransactionMapper.toEntity(null, mockAccount()));
-    }
-
-    @Test
-    @DisplayName("toEntity() - SystemException on null account")
-    void Given_TransactionRequestDtoAndNull_When_ToEntity_Then_ThrowSystemException() {
-        assertThrows(SystemException.class,
-                () -> TransactionMapper.toEntity(mockTransactionRequestDto(), null));
-    }
-
-    @Test
     @DisplayName("toResponseDto() - success")
     void Given_TransactionAndBalanceAfter_When_ToResponseDto_Then_ReturnTransactionResponseDto() {
         // Given
@@ -67,20 +52,6 @@ class TransactionMapperTest {
                 () -> assertThat(responseDto.getDirection()).isEqualTo(entity.getDirection()),
                 () -> assertThat(responseDto.getDescription()).isEqualTo(entity.getDescription()),
                 () -> assertThat(responseDto.getBalanceAfter()).isEqualTo(balanceAfter.toString()));
-    }
-
-    @Test
-    @DisplayName("toResponseDto() - SystemException on null balanceAfter")
-    void Given_TransactionAndNull_When_ToResponseDto_Then_ThrowSystemException() {
-        assertThrows(SystemException.class,
-                () -> TransactionMapper.toResponseDto(mockTransaction(), null));
-    }
-
-    @Test
-    @DisplayName("toResponseDto() - SystemException on null entity")
-    void Given_NullAndBalanceAfter_When_ToResponseDto_Then_ThrowSystemException() {
-        assertThrows(SystemException.class,
-                () -> TransactionMapper.toResponseDto(null, new BigDecimal("1000.0")));
     }
 
     @Test

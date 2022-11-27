@@ -34,35 +34,6 @@ class BalanceMapperTest {
     }
 
     @Test
-    @DisplayName("toEntity() - return empty Balance on null Currency")
-    void Given_NullAndAccount_When_ToEntity_Then_ReturnEmptyBalance() {
-        // Given
-        Account account = mockAccount();
-        // When
-        Balance entity = BalanceMapper.toEntity(null, account);
-        // Then
-        assertAll(
-                () -> assertThat(entity.getId()).isNull(),
-                () -> assertThat(entity.getAccount()).isNull(),
-                () -> assertThat(entity.getCurrency()).isNull(),
-                () -> assertThat(entity.getAmount()).isNull());
-    }
-
-    @Test
-    @DisplayName("toEntity() - return empty Balance on null Account")
-    void Given_CurrencyAndNull_When_ToEntity_Then_ReturnEmptyBalance() {
-        // Given, When
-        Balance entity = BalanceMapper.toEntity(Currency.EUR, null);
-        // Then
-        assertAll(
-                () -> assertThat(entity.getId()).isNull(),
-                () -> assertThat(entity.getAccount()).isNull(),
-                () -> assertThat(entity.getCurrency()).isNull(),
-                () -> assertThat(entity.getAmount()).isNull());
-    }
-
-
-    @Test
     @DisplayName("toEntitySet() - success")
     void Given_CurrencySetAndAccount_When_ToEntitySet_Then_ReturnBalanceSet() {
         // Given
@@ -93,15 +64,6 @@ class BalanceMapperTest {
     }
 
     @Test
-    @DisplayName("toEntitySet() - return empty Balance on null Account")
-    void Given_CurrencySetAndNull_When_ToEntitySet_Then_ReturnEmptySet() {
-        // Given, When
-        Set<Balance> entitySet = BalanceMapper.toEntitySet(Currency.valuesAsSet(), null);
-        // Then
-        assertThat(entitySet.size()).isEqualTo(0);
-    }
-
-    @Test
     @DisplayName("toDto() - success")
     void Given_Balance_When_ToDto_Then_ReturnBalanceDto() {
         // Given
@@ -112,17 +74,6 @@ class BalanceMapperTest {
         assertAll(
                 () -> assertThat(dto.getAmount()).isEqualTo(AMOUNT.toString()),
                 () -> assertThat(dto.getCurrency()).isEqualTo(CURRENCY));
-    }
-
-    @Test
-    @DisplayName("toDto() - return empty BalanceDto on null")
-    void Given_Null_When_ToDto_Then_ReturnEmptyBalanceDto() {
-        // Given, When
-        BalanceDto dto = BalanceMapper.toDto(null);
-        // Then
-        assertAll(
-                () -> assertThat(dto.getAmount()).isNull(),
-                () -> assertThat(dto.getCurrency()).isNull());
     }
 
     @Test

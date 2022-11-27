@@ -5,16 +5,14 @@ import com.bank.app.dto.BalanceDto;
 import com.bank.app.entity.Account;
 import com.bank.app.entity.Balance;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 public class BalanceMapper {
 
-    public static Balance toEntity(Currency currency, Account account) {
-        if (currency == null || account == null) {
-            return new Balance();
-        }
+    public static Balance toEntity(@NotNull Currency currency, @NotNull Account account) {
         return Balance.builder()
                 .account(account)
                 .currency(currency)
@@ -22,8 +20,8 @@ public class BalanceMapper {
                 .build();
     }
 
-    public static Set<Balance> toEntitySet(Set<Currency> currencySet, Account account) {
-        if (currencySet == null || currencySet.size() == 0 || account == null) {
+    public static Set<Balance> toEntitySet(@NotNull Set<Currency> currencySet, @NotNull Account account) {
+        if (currencySet.size() == 0) {
             return new HashSet<>();
         }
         Set<Balance> balanceSet = new HashSet<>();
@@ -35,10 +33,7 @@ public class BalanceMapper {
         return balanceSet;
     }
 
-    public static BalanceDto toDto(Balance entity) {
-        if (entity == null) {
-            return new BalanceDto();
-        }
+    public static BalanceDto toDto(@NotNull Balance entity) {
         // TODO: CHECK HERE!!!!
         String amountStr = entity.getAmount().toString();
         return BalanceDto.builder()
@@ -48,8 +43,8 @@ public class BalanceMapper {
     }
 
 
-    public static Set<BalanceDto> toDtoSet(Set<Balance> entitySet) {
-        if (entitySet == null || entitySet.size() == 0) {
+    public static Set<BalanceDto> toDtoSet(@NotNull Set<Balance> entitySet) {
+        if (entitySet.size() == 0) {
             return new HashSet<>();
         }
         Set<BalanceDto> dtoSet = new HashSet<>();

@@ -2,8 +2,6 @@ package com.bank.app.controller;
 
 import com.bank.app.dto.ExceptionDto;
 import com.bank.app.exception.AccountNotFoundException;
-import com.bank.app.exception.AppException;
-import com.bank.app.exception.SystemException;
 import com.bank.app.exception.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,13 +25,12 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return wrapIntoResponseEntity(ex, HttpStatus.BAD_REQUEST);
     }
 
-    // TODO: should handle all the rest Exceptions?
-    @ExceptionHandler(SystemException.class)
-    public ResponseEntity<ExceptionDto> handleSystemException(SystemException ex) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionDto> handleAllExceptions(Exception ex) {
         return wrapIntoResponseEntity(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ResponseEntity<ExceptionDto> wrapIntoResponseEntity(AppException ex, HttpStatus status) {
+    private ResponseEntity<ExceptionDto> wrapIntoResponseEntity(Exception ex, HttpStatus status) {
         log.error(
                 """
 
@@ -50,7 +47,8 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(status)
                 .body(ExceptionDto.builder()
-                        .message(ex instanceof SystemException ? SystemException.DEFAULT_MESSAGE : ex.getMessage())
+                        .message(status == HttpStatus.INTERNAL_SERVER_ERROR ?
+                                "Internal Server Error" : ex.getMessage())
                         .build());
     }
 }

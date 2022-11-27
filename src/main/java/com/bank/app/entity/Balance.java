@@ -9,7 +9,7 @@ import java.math.RoundingMode;
 
 @Entity
 @Table(name = "balance", indexes = {
-        @Index(name = "fk_account_id_idx", columnList = "fk_account_id")
+        @Index(name = "balance_fk_account_id_idx", columnList = "fk_account_id")
 })
 @Getter
 @Setter
