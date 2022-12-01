@@ -11,8 +11,8 @@ import com.bank.app.exception.AccountNotFoundException;
 import com.bank.app.exception.UserException;
 import com.bank.app.mapper.AccountMapper;
 import com.bank.app.mapper.TransactionMapper;
-import com.bank.app.repository.AccountRepository;
-import com.bank.app.repository.TransactionRepository;
+import com.bank.app.dao.AccountRepository;
+import com.bank.app.dao.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -33,13 +33,12 @@ public class AccountService {
         this.transactionRepository = transactionRepository;
     }
 
-    // TODO: where to check notnull?
-    // TODO: mappers return empty objects or exception?
     // TODO: should the interface be added to lock service behaviour?
-    // TODO: AccountMapper, BalanceMapper to throw exceptions
+    // TODO: validate BigDecimal input fields
+    // TODO: Custom validator -> InvalidCurrencyException and all other ones
     public AccountResponseDto createAccount(@NotNull AccountRequestDto requestDto) {
         Account account = AccountMapper.toEntity(requestDto);
-        Account savedAccount = accountRepository.save(account);
+        Account savedAccount = accountRepository.saveAndFlush(account);
         return AccountMapper.toResponseDto(savedAccount);
     }
 
@@ -54,7 +53,8 @@ public class AccountService {
                 .orElseThrow(() -> new AccountNotFoundException(requestDto.getAccountId()));
 
         Transaction transaction = TransactionMapper.toEntity(requestDto, account);
-        Transaction savedTransaction = transactionRepository.save(transaction);
+        process(account, transaction);
+        Transaction savedTransaction = transactionRepository.saveAndFlush(transaction);
 
         return TransactionMapper.toResponseDto(transaction);
     }
@@ -69,5 +69,9 @@ public class AccountService {
 //        List<Transaction> transactionList = transactionRepository.findByAccount(proxy);
         return new ArrayList<TransactionResponseDto>();
 //        return transactionList.size() == 0 ? new ArrayList<>() : TransactionMapper.toResponseDtoList();
+    }
+
+    private void process(Account account, Transaction transaction) {
+
     }
 }

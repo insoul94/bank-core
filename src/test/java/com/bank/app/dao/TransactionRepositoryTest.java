@@ -1,4 +1,4 @@
-package com.bank.app.repository;
+package com.bank.app.dao;
 
 import com.bank.app.entity.Account;
 import com.bank.app.entity.Transaction;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @EntityScan("com.bank.app.entity")
-@EnableJpaRepositories("com.bank.app.repository")
+@EnableJpaRepositories("com.bank.app.dao")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TransactionRepositoryTest {
 

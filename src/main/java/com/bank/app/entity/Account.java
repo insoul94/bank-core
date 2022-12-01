@@ -26,5 +26,6 @@ public class Account {
     private String country;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
+    @ToString.Exclude
     private Set<Balance> balances;
 }

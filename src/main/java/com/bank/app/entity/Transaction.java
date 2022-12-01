@@ -40,7 +40,7 @@ public class Transaction {
     @Column(nullable = false, updatable = false)
     private Direction direction;
 
-    @Column(updatable = false)
+    @Column(nullable = false, updatable = false)
     private String description;
 
 

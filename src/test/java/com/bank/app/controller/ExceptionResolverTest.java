@@ -14,15 +14,17 @@ import org.springframework.validation.BindingResult;
 
 import static com.bank.app.util.DataMock.ACCOUNT_ID;
 import static com.bank.app.util.DataMock.mockAccountRequestDtoJson;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
-class ExceptionControllerTest {
+class ExceptionResolverTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -35,7 +37,7 @@ class ExceptionControllerTest {
     @DisplayName("handleAccountNotFoundException() - success")
     void Given_AccountNotFoundException_When_GetAccount_Then_ReturnNotFound() throws Exception {
         // Given
-        when(accountController.readAccount(ACCOUNT_ID)).thenThrow(AccountNotFoundException.class);
+        when(accountController.readAccount(ACCOUNT_ID)).thenThrow(new AccountNotFoundException(0L));
         // When
         mockMvc.perform(get("/account/{id}", ACCOUNT_ID)
                         .contentType(MediaType.TEXT_HTML)
@@ -43,7 +45,8 @@ class ExceptionControllerTest {
                 // Then
                 .andExpectAll(
                         status().isNotFound(),
-                        result -> assertTrue(result.getResolvedException() instanceof AccountNotFoundException)
+                        result -> assertTrue(result.getResolvedException() instanceof AccountNotFoundException),
+                        jsonPath("$.message", notNullValue())
                 );
     }
 
@@ -52,7 +55,7 @@ class ExceptionControllerTest {
     void Given_UserException_When_PostAccount_Then_ReturnBadRequest() throws Exception {
         // Given
         when(accountController.createAccount(any(AccountRequestDto.class), any(BindingResult.class)))
-                .thenThrow(UserException.class);
+                .thenThrow(new UserException());
         // When
         mockMvc.perform(post("/account")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -61,7 +64,8 @@ class ExceptionControllerTest {
                 // Then
                 .andExpectAll(
                         status().isBadRequest(),
-                        result -> assertTrue(result.getResolvedException() instanceof UserException)
+                        result -> assertTrue(result.getResolvedException() instanceof UserException),
+                        jsonPath("$.message", notNullValue())
                 );
     }
 
@@ -70,7 +74,7 @@ class ExceptionControllerTest {
     void Given_AnyException_When_PostAccount_Then_ReturnInternalServerError() throws Exception {
         // Given
         when(accountController.createAccount(any(AccountRequestDto.class), any(BindingResult.class)))
-                .thenThrow(IllegalArgumentException.class);
+                .thenThrow(new IllegalArgumentException());
         // When
         mockMvc.perform(post("/account")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +83,8 @@ class ExceptionControllerTest {
                 // Then
                 .andExpectAll(
                         status().isInternalServerError(),
-                        result -> assertTrue(result.getResolvedException() instanceof IllegalArgumentException)
+                        result -> assertTrue(result.getResolvedException() instanceof IllegalArgumentException),
+                        jsonPath("$.message", notNullValue())
                 );
     }
 }

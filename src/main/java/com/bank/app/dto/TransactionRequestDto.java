@@ -14,6 +14,7 @@ import javax.validation.constraints.Positive;
 @Builder
 public class TransactionRequestDto {
 
+    @NotNull
     @Positive
     @JsonProperty("account_id")
     private Long accountId;

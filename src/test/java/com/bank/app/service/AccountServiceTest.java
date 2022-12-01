@@ -3,7 +3,7 @@ package com.bank.app.service;
 import com.bank.app.dto.AccountRequestDto;
 import com.bank.app.dto.AccountResponseDto;
 import com.bank.app.entity.Account;
-import com.bank.app.repository.AccountRepository;
+import com.bank.app.dao.AccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,7 @@ class AccountServiceTest {
         // Given
         AccountRequestDto requestDto = mockAccountRequestDto();
         Account account = mockAccount();
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
+        when(accountRepository.saveAndFlush(any(Account.class))).thenReturn(account);
         // When
         AccountResponseDto responseDto = accountService.createAccount(requestDto);
         // Then

@@ -14,11 +14,12 @@ import javax.validation.constraints.Positive;
 @Builder
 public class TransactionResponseDto {
 
+    @NotNull
     @Positive
     private Long id;
 
-    @JsonProperty("account_id)")
     @Positive
+    @JsonProperty("account_id)")
     private Long accountId;
 
     @NotBlank
@@ -30,6 +31,7 @@ public class TransactionResponseDto {
     @NotNull
     private Direction direction;
 
+    @NotBlank
     private String description;
 
     private String balanceAfter;

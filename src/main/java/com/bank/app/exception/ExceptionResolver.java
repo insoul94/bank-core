@@ -1,8 +1,6 @@
-package com.bank.app.controller;
+package com.bank.app.exception;
 
 import com.bank.app.dto.ExceptionDto;
-import com.bank.app.exception.AccountNotFoundException;
-import com.bank.app.exception.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @Slf4j
 @ControllerAdvice
-public class ExceptionController extends ResponseEntityExceptionHandler {
+public class ExceptionResolver extends ResponseEntityExceptionHandler {
     // TODO: Note that in order for an @ControllerAdvice subclass to be detected, ExceptionHandlerExceptionResolver must be configured.
 
     @ExceptionHandler(AccountNotFoundException.class)

@@ -1,12 +1,15 @@
 package com.bank.app.exception;
 
 import com.bank.app.constant.Currency;
-import com.bank.app.exception.UserException;
 
 public class InvalidCurrencyException extends UserException {
 
     public InvalidCurrencyException() {
-        super("Invalid currency. Allowed currencies: " +
-                "{" + String.join(", ", Currency.valuesAsStringArray()) + "}");
+        this(String.format("Invalid currency. Allowed: [%s].",
+                String.join(", ", Currency.valuesAsStringArray())));
+    }
+
+    public InvalidCurrencyException(String message) {
+        super(message);
     }
 }

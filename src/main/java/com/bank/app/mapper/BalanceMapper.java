@@ -20,8 +20,8 @@ public class BalanceMapper {
                 .build();
     }
 
-    public static Set<Balance> toEntitySet(@NotNull Set<Currency> currencySet, @NotNull Account account) {
-        if (currencySet.size() == 0) {
+    public static Set<Balance> toEntitySet(Set<Currency> currencySet, @NotNull Account account) {
+        if (currencySet == null || currencySet.size() == 0) {
             return new HashSet<>();
         }
         Set<Balance> balanceSet = new HashSet<>();
