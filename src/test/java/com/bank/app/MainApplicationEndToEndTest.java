@@ -20,13 +20,25 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-// TODO: ??? @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
 public class MainApplicationEndToEndTest {
+
+// TODO: @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//		@LocalServerPort
+//		private int port;
+//
+//		@Autowired
+//		private TestRestTemplate restTemplate;
+//
+//		@Test
+//		public void greetingShouldReturnDefaultMessage() throws Exception {
+//			assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
+//					String.class)).contains("Hello, World");
+//		}
 
 	@Autowired
 	private MockMvc mockMvc;

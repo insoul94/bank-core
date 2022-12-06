@@ -24,7 +24,7 @@ class BalanceMapperTest {
         // Given
         Account account = mockAccount();
         // When
-        Balance entity = BalanceMapper.toEntity(Currency.EUR, account);
+        Balance entity = BalanceMapper.toEntity(Currency.EUR.name(), account);
         // Then
         assertAll(
                 () -> assertThat(entity.getId()).isNull(),
@@ -39,7 +39,7 @@ class BalanceMapperTest {
         // Given
         Account account = mockAccount();
         // When
-        Set<Balance> entitySet = BalanceMapper.toEntitySet(Currency.valuesAsSet(), account);
+        Set<Balance> entitySet = BalanceMapper.toEntitySet(Currency.valuesAsStringSet(), account);
         // Then
         assertAll(
                 () -> assertThat(entitySet.stream().map(Balance::getCurrency).toList())

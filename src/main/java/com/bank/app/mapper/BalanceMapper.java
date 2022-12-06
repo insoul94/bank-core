@@ -12,21 +12,21 @@ import java.util.Set;
 
 public class BalanceMapper {
 
-    public static Balance toEntity(@NotNull Currency currency, @NotNull Account account) {
+    public static Balance toEntity(@NotNull String currencyStr, @NotNull Account account) {
         return Balance.builder()
                 .account(account)
-                .currency(currency)
+                .currency(Currency.valueOf(currencyStr))
                 .amount(BigDecimal.ZERO)
                 .build();
     }
 
-    public static Set<Balance> toEntitySet(Set<Currency> currencySet, @NotNull Account account) {
-        if (currencySet == null || currencySet.size() == 0) {
+    public static Set<Balance> toEntitySet(Set<String> currencyStrSet, @NotNull Account account) {
+        if (currencyStrSet == null || currencyStrSet.size() == 0) {
             return new HashSet<>();
         }
         Set<Balance> balanceSet = new HashSet<>();
-        for (Currency currency : currencySet) {
-            Balance balance = toEntity(currency, account);
+        for (String currencyStr : currencyStrSet) {
+            Balance balance = toEntity(currencyStr, account);
             balance.setAccount(account);
             balanceSet.add(balance);
         }

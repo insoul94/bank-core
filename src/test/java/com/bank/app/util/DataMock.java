@@ -52,7 +52,7 @@ public class DataMock {
                 .build();
     }
     public static Set<Balance> mockBalanceSet() {
-        return BalanceMapper.toEntitySet(Currency.valuesAsSet(), mockAccount());
+        return BalanceMapper.toEntitySet(Currency.valuesAsStringSet(), mockAccount());
     }
 
     public static Set<BalanceDto> mockBalanceDtoSet() {
@@ -65,7 +65,7 @@ public class DataMock {
                 .customerId(CUSTOMER_ID)
                 .country(COUNTRY)
                 .build();
-        account.setBalances(BalanceMapper.toEntitySet(Currency.valuesAsSet(), account));
+        account.setBalances(BalanceMapper.toEntitySet(Currency.valuesAsStringSet(), account));
         return account;
     }
 
@@ -73,7 +73,7 @@ public class DataMock {
         return AccountRequestDto.builder()
                 .customerId(CUSTOMER_ID)
                 .country(COUNTRY)
-                .currencies(Currency.valuesAsSet())
+                .currencies(Currency.valuesAsStringSet())
                 .build();
     }
 

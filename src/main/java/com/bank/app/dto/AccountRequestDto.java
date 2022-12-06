@@ -1,12 +1,12 @@
 package com.bank.app.dto;
 
+import com.bank.app.validator.ValidCurrencies;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.bank.app.constant.Currency;
 import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.Set;
 
 @Data
 @Builder
@@ -18,5 +18,6 @@ public class AccountRequestDto {
 
     private String country;
 
-    private Set<Currency> currencies;
+    @ValidCurrencies
+    private Set<String> currencies;
 }

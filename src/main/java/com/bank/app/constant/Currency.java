@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+// TODO: should be used java.util.Currency instead?
 public enum Currency {
     EUR, GBP, SEK, USD;
 
@@ -15,7 +16,7 @@ public enum Currency {
         return arr;
     }
 
-    public static Set<Currency> valuesAsSet() {
-        return Arrays.stream(values()).collect(Collectors.toSet());
+    public static Set<String> valuesAsStringSet() {
+        return Arrays.stream(valuesAsStringArray()).collect(Collectors.toSet());
     }
 }

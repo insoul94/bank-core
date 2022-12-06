@@ -33,8 +33,15 @@ class AccountMapperTest {
         assertAll(
                 () -> assertThat(entity.getCustomerId()).isEqualTo(requestDto.getCustomerId()),
                 () -> assertThat(entity.getCountry()).isEqualTo(requestDto.getCountry()),
-                () -> assertThat(getCurrencyArray(entity))
-                        .containsExactlyInAnyOrderElementsOf(requestDto.getCurrencies()),
+
+                () -> assertThat(
+                        getCurrencyArray(entity))
+                        .containsExactlyInAnyOrderElementsOf(
+                                requestDto.getCurrencies()
+                                        .stream()
+                                        .map(Currency::valueOf)
+                                        .collect(Collectors.toSet())),
+
                 () -> assertThat(entity.getBalances()).allSatisfy(balance -> {
                     assertThat(balance.getAccount()).isEqualTo(entity);
                     assertThat(balance.getAmount()).isEqualTo(new BigDecimal("0.00"));

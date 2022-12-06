@@ -36,7 +36,6 @@ public class AccountController {
             @RequestBody @Valid AccountRequestDto accountRequestDto, BindingResult bindingResult)
             throws InvalidCurrencyException {
 
-        // TODO: no effect - REDO with custom validator
         if (bindingResult.hasFieldErrors("currencies")) {
             throw new InvalidCurrencyException();
         } else if (bindingResult.hasErrors()) {
