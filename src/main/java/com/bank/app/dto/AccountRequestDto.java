@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.Set;
 
 @Data
@@ -13,6 +14,7 @@ import java.util.Set;
 public class AccountRequestDto {
 
     @NotNull
+    @Positive
     @JsonProperty("customer_id")
     private Long customerId;
 

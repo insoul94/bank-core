@@ -1,8 +1,11 @@
 package com.bank.app.controller;
 
 import com.bank.app.dto.AccountRequestDto;
+import com.bank.app.dto.AccountResponseDto;
 import com.bank.app.exception.InvalidCurrencyException;
+import com.bank.app.exception.UserException;
 import com.bank.app.service.AccountService;
+import com.bank.app.util.HttpUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import static com.bank.app.util.DataMock.*;
 import static com.bank.app.util.HttpUtils.toJson;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,7 +51,7 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("createAccount() - InvalidCurrencyException on invalid currency")
-    void Given_InvalidCurrency_When_CreateAccount_Then_Throw2InvalidCurrencyException() throws Exception {
+    void Given_InvalidCurrency_When_CreateAccount_Then_ThrowInvalidCurrencyException() throws Exception {
         // Given
         String requestJson = mockAccountRequestDtoJson().replace("EUR", "XXX");
         // When
@@ -60,6 +64,42 @@ class AccountControllerTest {
                         status().isBadRequest(),
                         result -> assertTrue(result.getResolvedException() instanceof InvalidCurrencyException));
     }
+
+    @Test
+    @DisplayName("createAccount() - UserException on invalid input")
+    void Given_InvalidInput_When_CreateAccount_Then_ThrowUserException() throws Exception {
+        // Given
+        AccountRequestDto requestDto = mockAccountRequestDto();
+        requestDto.setCustomerId(-1L);
+        String requestJson = HttpUtils.toJson(requestDto);
+        // When
+        mockMvc.perform(post("/account")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+                        .accept(MediaType.APPLICATION_JSON))
+                // Then
+                .andExpectAll(
+                        status().isBadRequest(),
+                        result -> assertTrue(result.getResolvedException() instanceof UserException));
+    }
+
+    @Test
+    @DisplayName("readAccount() - success")
+    void Given_AccountId_When_ReadAccount_Then_Success() throws Exception {
+        // Given
+        AccountResponseDto responseDto = mockAccountResponseDto();
+        when(accountService.readAccount(responseDto.getId())).thenReturn(responseDto);
+        // When
+        mockMvc.perform(get("/account/"+ responseDto.getId())
+                        .contentType(MediaType.TEXT_HTML)
+                        .accept(MediaType.APPLICATION_JSON))
+                // Then
+                .andExpectAll(
+                        status().isFound(),
+                        content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+
 /*
     @Test
     @DisplayName("readAccount() - success")

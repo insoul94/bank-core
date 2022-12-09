@@ -18,6 +18,7 @@ public class TransactionResponseDto {
     @Positive
     private Long id;
 
+    @NotNull
     @Positive
     @JsonProperty("account_id)")
     private Long accountId;

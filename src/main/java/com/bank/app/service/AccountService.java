@@ -36,6 +36,7 @@ public class AccountService {
     // TODO: should the interface be added to lock service behaviour?
     // TODO: validate BigDecimal input fields
     // TODO: Custom validator -> InvalidCurrencyException and all other ones
+    // TODO: SHould countries be validated?
     public AccountResponseDto createAccount(@NotNull AccountRequestDto requestDto) {
         Account account = AccountMapper.toEntity(requestDto);
         Account savedAccount = accountRepository.saveAndFlush(account);

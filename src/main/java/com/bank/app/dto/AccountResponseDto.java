@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.Set;
 
 @Data
@@ -16,10 +17,12 @@ import java.util.Set;
 public class AccountResponseDto {
 
     @NotNull
+    @Positive
     @JsonProperty("id")
     private Long id;
 
     @NotNull
+    @Positive
     @JsonProperty("customer_id")
     private Long customerId;
 
