@@ -1,5 +1,6 @@
 package com.bank.app.dto;
 
+import com.bank.app.validator.ValidAmount;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.bank.app.constant.Currency;
 import com.bank.app.constant.Direction;
@@ -19,7 +20,7 @@ public class TransactionRequestDto {
     @JsonProperty("account_id")
     private Long accountId;
 
-    @NotNull
+    @ValidAmount
     private String amount;
 
     @NotNull

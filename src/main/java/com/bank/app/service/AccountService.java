@@ -37,6 +37,7 @@ public class AccountService {
     // TODO: validate BigDecimal input fields
     // TODO: Custom validator -> InvalidCurrencyException and all other ones
     // TODO: SHould countries be validated?
+    // TODO: Extensive validation for amount with regex?
     public AccountResponseDto createAccount(@NotNull AccountRequestDto requestDto) {
         Account account = AccountMapper.toEntity(requestDto);
         Account savedAccount = accountRepository.saveAndFlush(account);
